@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ProjectListView from "../views/ProjectListView.vue";
+import ProjectViewSettings from "../views/ProjectViewSettings.vue";
+import ProjectViewStats from "../views/ProjectViewStats.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,11 +11,16 @@ const router = createRouter({
       name: "projects",
       component: ProjectListView,
     },
-    // {
-    //   path: "/city-view/:city/:state",
-    //   name: "cityView",
-    //   component: CityView,
-    // },
+    {
+      path: "/:project",
+      name: "project",
+      component: ProjectViewStats,
+    },
+    {
+      path: "/:project/settings",
+      name: "projectSettings",
+      component: ProjectViewSettings,
+    },
   ],
 });
 
