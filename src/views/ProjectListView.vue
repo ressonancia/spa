@@ -71,7 +71,9 @@
     </div>
 
     <div class="mt-20">
-      <button type="button"
+      <button 
+        @click="createProject"
+        type="button"
         class="inline-flex items-center gap-x-2 rounded-md bg-gray-800  px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">
         Create Project
         <PlusIcon class="-ml-0.5 h-5 w-5" aria-hidden="true" />
@@ -83,65 +85,70 @@
 
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
+import { EllipsisHorizontalIcon, InboxArrowDownIcon } from '@heroicons/vue/20/solid'
 import { PlusIcon } from '@heroicons/vue/20/solid'
+import axios from 'axios';
 
-let clients = [
-  {
-    id: 1,
-    name: 'Tuple',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
-    lastInvoice: { date: 'December 13, 2022', dateTime: '2022-12-13', amount: '$2,000.00', status: 'Overdue' },
-  },
-  {
-    id: 2,
-    name: 'SavvyCal',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
-    lastInvoice: { date: 'January 22, 2023', dateTime: '2023-01-22', amount: '$14,000.00', status: 'Paid' },
-  },
-  {
-    id: 3,
-    name: 'Reform',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
-    lastInvoice: { date: 'January 23, 2023', dateTime: '2023-01-23', amount: '$7,600.00', status: 'Paid' },
-  },
-  {
-    id: 4,
-    name: 'Tuple',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
-    lastInvoice: { date: 'December 13, 2022', dateTime: '2022-12-13', amount: '$2,000.00', status: 'Overdue' },
-  },
-  {
-    id: 5,
-    name: 'SavvyCal',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
-    lastInvoice: { date: 'January 22, 2023', dateTime: '2023-01-22', amount: '$14,000.00', status: 'Paid' },
-  },
-  {
-    id: 6,
-    name: 'Reform',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
-    lastInvoice: { date: 'January 23, 2023', dateTime: '2023-01-23', amount: '$7,600.00', status: 'Paid' },
-  },
-  {
-    id: 7,
-    name: 'Tuple',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
-    lastInvoice: { date: 'December 13, 2022', dateTime: '2022-12-13', amount: '$2,000.00', status: 'Overdue' },
-  },
-  {
-    id: 8,
-    name: 'SavvyCal',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
-    lastInvoice: { date: 'January 22, 2023', dateTime: '2023-01-22', amount: '$14,000.00', status: 'Paid' },
-  },
-  {
-    id: 9,
-    name: 'Reform',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
-    lastInvoice: { date: 'January 23, 2023', dateTime: '2023-01-23', amount: '$7,600.00', status: 'Paid' },
-  },
-]
+
+
+// let clients = [
+//   {
+//     id: 1,
+//     name: 'Tuple',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
+//     lastInvoice: { date: 'December 13, 2022', dateTime: '2022-12-13', amount: '$2,000.00', status: 'Overdue' },
+//   },
+//   {
+//     id: 2,
+//     name: 'SavvyCal',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
+//     lastInvoice: { date: 'January 22, 2023', dateTime: '2023-01-22', amount: '$14,000.00', status: 'Paid' },
+//   },
+//   {
+//     id: 3,
+//     name: 'Reform',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
+//     lastInvoice: { date: 'January 23, 2023', dateTime: '2023-01-23', amount: '$7,600.00', status: 'Paid' },
+//   },
+//   {
+//     id: 4,
+//     name: 'Tuple',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
+//     lastInvoice: { date: 'December 13, 2022', dateTime: '2022-12-13', amount: '$2,000.00', status: 'Overdue' },
+//   },
+//   {
+//     id: 5,
+//     name: 'SavvyCal',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
+//     lastInvoice: { date: 'January 22, 2023', dateTime: '2023-01-22', amount: '$14,000.00', status: 'Paid' },
+//   },
+//   {
+//     id: 6,
+//     name: 'Reform',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
+//     lastInvoice: { date: 'January 23, 2023', dateTime: '2023-01-23', amount: '$7,600.00', status: 'Paid' },
+//   },
+//   {
+//     id: 7,
+//     name: 'Tuple',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
+//     lastInvoice: { date: 'December 13, 2022', dateTime: '2022-12-13', amount: '$2,000.00', status: 'Overdue' },
+//   },
+//   {
+//     id: 8,
+//     name: 'SavvyCal',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
+//     lastInvoice: { date: 'January 22, 2023', dateTime: '2023-01-22', amount: '$14,000.00', status: 'Paid' },
+//   },
+//   {
+//     id: 9,
+//     name: 'Reform',
+//     imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
+//     lastInvoice: { date: 'January 23, 2023', dateTime: '2023-01-23', amount: '$7,600.00', status: 'Paid' },
+//   },
+// ]
+
+let clients = [];
 
 let integrations = [
   {
@@ -176,5 +183,17 @@ let integrations = [
   }
 ]
 
-// clients = [];
+const createProject = async () => {
+  try {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/apps`);
+        let data = response.data;
+        console.log(data)
+        window.alert("Sucesso")
+      } catch (error) {
+        let errorMessage = 'Error fetching data';
+        console.error(error);
+        window.alert("Xablau")
+      }
+}
+
 </script>
