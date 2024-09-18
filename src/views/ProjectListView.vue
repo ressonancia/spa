@@ -51,15 +51,26 @@
     <div class="max-w-2xl mt-20">
       <p for="name" class="block text-sm font-medium leading-6 text-gray-900 text-left">Project Name</p>
       <div class="mt-2">
-        <input type="text" name="name" id="name"
-          class="block w-full rounded-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        <input
+          type="text"
+          v-model="appName"
+          name="appName"
+          id="appName"
+          :class="{
+            'ring-gray-300': valid,
+            'ring-orange-500': !valid
+          }"
+          class="block w-full rounded-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           placeholder="Name your next big dream" />
       </div>
     </div>
 
     <div class="mt-20">
       <ul role="list" class="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8">
-        <li v-for="integration in integrations" :key="integration.id"
+        <li @click="chosenLanguage=integration.name" v-for="integration in integrations" :key="integration.id"
+          :class="{
+            'border-orange-500': chosenLanguage == integration.name
+          }"
           class="overflow-hidden rounded-xl border border-gray-200 hover:border-orange-500 cursor-pointer">
           <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
             <img :src="integration.imageUrl" :alt="integration.name"
@@ -88,8 +99,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisHorizontalIcon, InboxArrowDownIcon } from '@heroicons/vue/20/solid'
 import { PlusIcon } from '@heroicons/vue/20/solid'
 import axios from 'axios';
-
-
+import { ref } from 'vue'
 
 // let clients = [
 //   {
@@ -183,15 +193,29 @@ let integrations = [
   }
 ]
 
+const chosenLanguage = ref('')
+const appName = ref('')
+const valid = ref(true)
+
 const createProject = async () => {
   try {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/apps`);
-        let data = response.data;
-        console.log(data)
+
+        if (!appName.value) {
+          valid.value = false
+          return false
+        } else {
+          valid.value = true
+        }
+
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/apps`, {
+          app_name: appName.value,
+          app_language_choice: chosenLanguage.value ?? ''
+        });
+
+        appName.value = ''
+        chosenLanguage.value = ''
         window.alert("Sucesso")
       } catch (error) {
-        let errorMessage = 'Error fetching data';
-        console.error(error);
         window.alert("Xablau")
       }
 }
