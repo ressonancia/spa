@@ -9,6 +9,7 @@
 				<div class="mt-2 flex rounded-md shadow-sm">
 					<div class="relative flex flex-grow items-stretch focus-within:z-10">
 						<input :type="inputType" name="key" id="key"
+							v-model="app.app_secret"
 							class="block w-full rounded-l-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
 					</div>
 					<button type="button" @click="toggle"
@@ -47,11 +48,13 @@
 import { useRoute } from "vue-router";
 import { EyeIcon, EyeSlashIcon} from '@heroicons/vue/20/solid'
 import { ref } from 'vue'
+import axios from 'axios';
 import CodeSnippet from '../components/CodeSnippet.vue';
 
 let redacted = ref(true);
 let inputType = ref('password');
 let showText = ref('Show');
+let app = ref({})
 
 const toggle = () => {
 	redacted.value = !redacted.value;
@@ -68,4 +71,11 @@ const toggle = () => {
 
 const route = useRoute();
 const projectName = route.params.project;
+
+axios.get(`${import.meta.env.VITE_API_URL}/api/apps/${projectName}`).then(function (response) {
+	app.value = response.data
+})
+.catch(function (error) {
+	alert(error)
+});
 </script>

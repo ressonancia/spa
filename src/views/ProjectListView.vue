@@ -100,6 +100,9 @@ import { EllipsisHorizontalIcon, InboxArrowDownIcon } from '@heroicons/vue/20/so
 import { PlusIcon } from '@heroicons/vue/20/solid'
 import axios from 'axios';
 import { ref } from 'vue'
+import { useRouter } from "vue-router";
+
+let router = useRouter()
 
 // let clients = [
 //   {
@@ -207,16 +210,24 @@ const createProject = async () => {
           valid.value = true
         }
 
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/apps`, {
+        let response;
+
+        response = await axios.post(`${import.meta.env.VITE_API_URL}/api/apps`, {
           app_name: appName.value,
           app_language_choice: chosenLanguage.value ?? ''
         });
 
         appName.value = ''
         chosenLanguage.value = ''
-        window.alert("Sucesso")
+        router.push({
+            name: "projectSettings",
+            params: {
+              project: response.data.id
+            }
+        });
+
       } catch (error) {
-        window.alert("Xablau")
+        window.alert(error)
       }
 }
 
