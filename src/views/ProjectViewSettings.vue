@@ -5,15 +5,15 @@
 			side</p>
 
 		<div class="mt-10">
-			<RedactedField :value="app.app_id">App ID</RedactedField>
+			<CopyField :value="app.app_id">App ID</CopyField>
 		</div>
 
 		<div class="mt-10">
-			<RedactedField :value="app.app_key">App Key</RedactedField>
+			<CopyField :value="app.app_key">App Key</CopyField>
 		</div>
 
 		<div class="mt-10">
-			<RedactedField :value="app.app_secret">App Secret</RedactedField>
+			<CopyField hide="true" :value="app.app_secret">App Secret</CopyField>
 		</div>
 
 		<figure class="mt-16">
@@ -43,7 +43,7 @@ import { useRoute } from "vue-router";
 import { ref } from 'vue'
 import axios from 'axios';
 import CodeSnippet from '../components/CodeSnippet.vue';
-import RedactedField from '../components/RedactedField.vue';
+import CopyField from '../components/CopyField.vue';
 
 let app = ref({})
 const route = useRoute();
