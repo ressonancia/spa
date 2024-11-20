@@ -123,7 +123,7 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { useGlobalStore } from "../stores/global";
+import { useGlobalStore } from "@/stores/global";
 import { ref } from 'vue'
 
 const globalStore = useGlobalStore();
@@ -141,7 +141,7 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Projetos', href: '/', current: true },
+  { name: 'Projetos', href: '/dashboard', current: true },
 //   { name: 'Team', href: '#', current: false }
 ]
 const userNavigation = [

@@ -42,10 +42,10 @@
 import { useRoute } from "vue-router";
 import { ref } from 'vue'
 import axios from 'axios';
-import CodeSnippet from '../components/CodeSnippet.vue';
-import CopyField from '../components/CopyField.vue';
-import { useGlobalStore } from "../stores/global";
-import { stringLimit } from '../common/utils';
+import CodeSnippet from '@/components/CodeSnippet.vue';
+import CopyField from '@/components/CopyField.vue';
+import { useGlobalStore } from "@/stores/global";
+import { stringLimit } from '@/common/utils';
 
 const globalStore = useGlobalStore();
 

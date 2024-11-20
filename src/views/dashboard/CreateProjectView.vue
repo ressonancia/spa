@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import CreateProjectForm from '../components/CreateProjectForm.vue';
+import CreateProjectForm from '@/components/CreateProjectForm.vue';
 </script>

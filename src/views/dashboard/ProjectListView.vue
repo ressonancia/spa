@@ -58,12 +58,12 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
-import CreateProjectForm from '../components/CreateProjectForm.vue';
-import { stringLimit } from '../common/utils';
+import CreateProjectForm from '@/components/CreateProjectForm.vue';
+import { stringLimit } from '@/common/utils';
 import axios from 'axios';
 import { ref } from 'vue'
 import { DateTime } from 'luxon'
-import laravelLogoUrl from '../assets/img/laravel.png'
+import laravelLogoUrl from '@/assets/img/laravel.png'
 
 var clients = ref([])
 
