@@ -6,7 +6,7 @@
         <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
           <img :src="client.imageUrl" :alt="client.name"
             class="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10" />
-          <div class="text-sm font-medium leading-6 text-gray-900">{{ limitName(client.name) }}</div>
+          <div class="text-sm font-medium leading-6 text-gray-900">{{ stringLimit(client.name) }}</div>
           <Menu as="div" class="relative ml-auto">
             <MenuButton class="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500">
               <span class="sr-only">Open options</span>
@@ -59,6 +59,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 import CreateProjectForm from '../components/CreateProjectForm.vue';
+import { stringLimit } from '../common/utils';
 import axios from 'axios';
 import { ref } from 'vue'
 import { DateTime } from 'luxon'
@@ -81,10 +82,4 @@ axios.get(`${import.meta.env.VITE_API_URL}/api/apps`)
     console.log(error)
     alert('Erro')
   })
-
-const limitName = (name) => {
-  return name.length > 25
-    ? name.slice(0, 25)+'...'
-    : name
-}
 </script>

@@ -44,6 +44,10 @@ import { ref } from 'vue'
 import axios from 'axios';
 import CodeSnippet from '../components/CodeSnippet.vue';
 import CopyField from '../components/CopyField.vue';
+import { useGlobalStore } from "../stores/global";
+import { stringLimit } from '../common/utils';
+
+const globalStore = useGlobalStore();
 
 let app = ref({})
 const route = useRoute();
@@ -51,6 +55,7 @@ const projectName = route.params.project;
 
 axios.get(`${import.meta.env.VITE_API_URL}/api/apps/${projectName}`).then(function (response) {
 	app.value = response.data
+	globalStore.setHeaderLabel(stringLimit(app.value.app_name.toLowerCase(), 50))
 })
 .catch(function (error) {
 	alert(error)

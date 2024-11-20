@@ -99,7 +99,7 @@
 
 		<header class="bg-white shadow">
 			<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-				<h1 class="text-3xl font-bold tracking-tight text-gray-900">Projects</h1>
+				<h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ headerLabel }}</h1>
 			</div>
 		</header>
 	</div>
@@ -123,6 +123,16 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { useGlobalStore } from "../stores/global";
+import { ref } from 'vue'
+
+const globalStore = useGlobalStore();
+const headerLabel = ref('')
+headerLabel.value = globalStore.headerLabel
+
+globalStore.$onAction((action) => {
+	headerLabel.value = action.args[0] ?? 'Project'
+})
 
 const user = {
   name: 'Tom Cook',
@@ -131,11 +141,8 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+  { name: 'Projetos', href: '/', current: true },
+//   { name: 'Team', href: '#', current: false }
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
