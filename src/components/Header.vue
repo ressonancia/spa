@@ -5,7 +5,7 @@
 				<div class="flex h-16 items-center justify-between">
 					<div class="flex items-center">
 						<div class="flex-shrink-0">
-							<img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+							<img class="h-8 w-8" :src="logoUrl"
 								alt="Your Company" />
 						</div>
 						<div class="hidden md:block">
@@ -126,6 +126,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useGlobalStore } from "@/stores/global";
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
+import logoUrl from '@/assets/img/logo.png'
 
 const router = useRouter()
 const route = useRoute()

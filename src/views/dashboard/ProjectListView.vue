@@ -59,15 +59,15 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 import CreateProjectForm from '@/components/CreateProjectForm.vue';
-import { stringLimit } from '@/common/utils';
-import axios from 'axios';
+import { stringLimit } from '@/services/utils';
+import apiRequester from '@/services/requester';
 import { ref } from 'vue'
 import { DateTime } from 'luxon'
 import laravelLogoUrl from '@/assets/img/laravel.png'
 
 var clients = ref([])
 
-axios.get(`${import.meta.env.VITE_API_URL}/api/apps`)
+apiRequester.get(`${import.meta.env.VITE_API_URL}/api/apps`)
   .then(function (response) {
     response.data.data.forEach(app => {
       clients.value.push({
