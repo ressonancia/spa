@@ -11,7 +11,6 @@ apiRequester.interceptors.request.use(
   (config) => {
     const globalStore = useGlobalStore()
     const token = globalStore.token
-    console.log('INTERCEPTOR EXECUTADO' + globalStore.token)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // Set Authorization header
     }

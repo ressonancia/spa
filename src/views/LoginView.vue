@@ -38,7 +38,7 @@
           </div>
         </form>
 
-        <div>
+        <!-- <div>
           <div class="relative mt-10">
             <div class="absolute inset-0 flex items-center" aria-hidden="true">
               <div class="w-full border-t border-gray-200" />
@@ -66,29 +66,33 @@
               <span class="text-sm/6 font-semibold">GitHub</span>
             </a>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Not a member?
         {{ ' ' }}
-        <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
+        <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Create an account for free.</a>
       </p>
     </div>
+
+    <Modal ref="modal" />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 import { useRouter } from "vue-router";
 import apiRequester from '@/services/requester';
 import logoUrl from '@/assets/img/logo.png'
 import { useGlobalStore } from "@/stores/global";
+import Modal from "@/views/modals/Modal.vue";
 
 const email = ref("");
 const password = ref("");
 const router = useRouter()
 const globalStore = useGlobalStore()
+const modalRef = useTemplateRef('modal')
 
 const login = async () => {
   apiRequester.post('/oauth/token', {
@@ -108,11 +112,15 @@ const login = async () => {
     .catch(error => {
       switch (error.code) {
         case 'ERR_BAD_REQUEST':
-          window.alert("Wrong Credentials.");
+          modalRef.value.showModal(
+            'Wrong Credentias',
+            'warning',
+            'If you don\'t remember the password try the "Forgot password" link'
+          )
           break;
       
         default:
-          window.alert("Login Error.");
+          modalRef.value.apiDownResponse()
           break;
       }
     });

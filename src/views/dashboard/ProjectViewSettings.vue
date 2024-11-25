@@ -35,19 +35,23 @@
 			</h2>
 			<CodeSnippet>composer require ressonance/sdk</CodeSnippet>
 		</div>
+
+		<Modal ref="modal" />
 	</div>
 </template>
 
 <script setup>
 import { useRoute } from "vue-router";
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import apiRequester from '@/services/requester';
 import CodeSnippet from '@/components/CodeSnippet.vue';
 import CopyField from '@/components/CopyField.vue';
+import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
 import { stringLimit } from '@/services/utils';
 
 const globalStore = useGlobalStore();
+const modalRef = useTemplateRef('modal')
 
 let app = ref({})
 const route = useRoute();
@@ -57,7 +61,7 @@ apiRequester.get(`${import.meta.env.VITE_API_URL}/api/apps/${projectName}`).then
 	app.value = response.data
 	globalStore.setHeaderLabel(stringLimit(app.value.app_name.toLowerCase(), 50))
 })
-.catch(function (error) {
-	alert(error)
+.catch(function () {
+	modalRef.value.apiDownResponse()
 });
 </script>
