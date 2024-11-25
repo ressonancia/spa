@@ -50,7 +50,10 @@
         </div>
       </dl>
     </li>
+
   </ul>
+
+  <Modal v-if="clients.length <= 0" ref="modal" />
 
   <CreateProjectForm  v-if="clients.length == 0" />
 </template>
@@ -59,15 +62,17 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 import CreateProjectForm from '@/components/CreateProjectForm.vue';
-import { stringLimit } from '@/common/utils';
-import axios from 'axios';
-import { ref } from 'vue'
+import Modal from "@/views/modals/Modal.vue";
+import { stringLimit } from '@/services/utils';
+import apiRequester from '@/services/requester';
+import { ref, useTemplateRef } from 'vue'
 import { DateTime } from 'luxon'
 import laravelLogoUrl from '@/assets/img/laravel.png'
 
 var clients = ref([])
+const modalRef = useTemplateRef('modal')
 
-axios.get(`${import.meta.env.VITE_API_URL}/api/apps`)
+apiRequester.get(`${import.meta.env.VITE_API_URL}/api/apps`)
   .then(function (response) {
     response.data.data.forEach(app => {
       clients.value.push({
@@ -79,7 +84,6 @@ axios.get(`${import.meta.env.VITE_API_URL}/api/apps`)
       })
     });    
   }).catch(function (error) {
-    console.log(error)
-    alert('Erro')
+    modalRef.value.apiDownResponse()
   })
 </script>

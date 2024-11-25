@@ -4,6 +4,8 @@ import CreateProjectView from "@/views/dashboard/CreateProjectView.vue";
 import ProjectViewSettings from "@/views/dashboard/ProjectViewSettings.vue";
 import ProjectViewStats from "@/views/dashboard/ProjectViewStats.vue";
 import Dashboard from "@/views/dashboard/Dashboard.vue";
+import LoginView from "@/views/LoginView.vue";
+import { useGlobalStore } from "@/stores/global";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +14,9 @@ const router = createRouter({
       path: "/dashboard",
       name: "dashboard",
       component: Dashboard,
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: "",
@@ -34,8 +39,26 @@ const router = createRouter({
           component: ProjectViewSettings,
         },
       ]
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
     }
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const globalStore = useGlobalStore()
+    if (!globalStore.isLoggedIn) {
+      next({ name: 'login' })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
 
 export default router;

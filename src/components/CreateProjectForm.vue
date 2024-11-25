@@ -19,16 +19,19 @@
 			</button>
 		</div>
 
+		<Modal ref="modal" />
 	</div>
 </template>
 
 <script setup>
+import Modal from "@/views/modals/Modal.vue";
 import { PlusIcon } from '@heroicons/vue/20/solid'
 import axios from 'axios';
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { useRouter } from "vue-router";
 
 let router = useRouter()
+const modalRef = useTemplateRef('modal')
 
 const chosenLanguage = ref('')
 const appName = ref('')
@@ -61,7 +64,7 @@ const createProject = async () => {
 		});
 
 	} catch (error) {
-		window.alert(error)
+		modalRef.value.apiDownResponse()
 	}
 }
 </script>
