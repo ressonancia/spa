@@ -32,6 +32,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div v-if="button" class="mt-5 sm:mt-6">
+                                <button type="button" class="w-full justify-center rounded-md px-3 py-5 bg-gray-800 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" @click="goto()">{{ buttonText }}</button>
+                            </div>
                         </DialogPanel>
                     </TransitionChild>
                 </div>
@@ -42,6 +45,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 
@@ -49,16 +53,35 @@ const open = ref(false)
 const title = ref('')
 const type = ref('')
 const description = ref('')
+const button = ref(false)
+const buttonText = ref('')
+const buttonRoute = ref('')
+
+const router = useRouter()
 
 const showModal = (
     modalTitle = "",
     modalType = "success",
     ModalDescription = "",
+    modalButton = false,
+    modalButtonText = '',
+    modalButtonRoute = ''
 ) => {
     title.value = modalTitle
     type.value = modalType
     description.value = ModalDescription
     open.value = true
+    button.value = modalButton
+    buttonText.value = modalButtonText
+    buttonRoute.value = modalButtonRoute
+}
+
+const goto = () => {
+    if (buttonRoute.value) {
+        router.push({
+            name: buttonRoute.value
+        })
+    }
 }
 
 const apiDownResponse = () => {

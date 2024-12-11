@@ -26,7 +26,7 @@
 <script setup>
 import Modal from "@/views/modals/Modal.vue";
 import { PlusIcon } from '@heroicons/vue/20/solid'
-import axios from 'axios';
+import apiRequester from '@/services/requester';
 import { ref, useTemplateRef } from 'vue'
 import { useRouter } from "vue-router";
 
@@ -49,7 +49,7 @@ const createProject = async () => {
 
 		let response;
 
-		response = await axios.post(`${import.meta.env.VITE_API_URL}/api/apps`, {
+		response = await apiRequester.post(`/api/apps`, {
 			app_name: appName.value,
 			app_language_choice: chosenLanguage.value ?? ''
 		});
