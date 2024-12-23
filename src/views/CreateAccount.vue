@@ -7,33 +7,72 @@
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
       <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-        <form @submit.prevent="login" class="space-y-6">
-
+        <Form @submit="login" class="space-y-6" :validation-schema="schema" v-slot="{ errors }">
           <div>
             <label for="name" class="block text-sm/6 font-medium text-gray-900">Name</label>
             <div class="mt-2">
-              <input v-model="name" id="name" name="name" type="text" autocomplete="name" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" />
+              <Field
+                v-model="name"
+                id="name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :validation-schema="schema"
+                :class="[ errors.name ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }" />
+              <p class="mt-2 text-sm text-orange-300" id="email-error">{{ errors.name }}</p>
             </div>
           </div>
 
           <div>
             <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
             <div class="mt-2">
-              <input v-model="email" id="email" name="email" type="email" autocomplete="email" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" />
+              <Field
+                v-model="email"
+                id="email"
+                name="email"
+                type="text"
+                autocomplete="email"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :validation-schema="schema"
+                :class="[ errors.email ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }" />
+                <p class="mt-2 text-sm text-orange-300" id="email-error">{{ errors.email }}</p>
             </div>
           </div>
 
           <div>
             <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
             <div class="mt-2">
-              <input v-model="password" id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" />
+              <Field
+                v-model="password"
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="password"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :validation-schema="schema"
+                :class="[ errors.password ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }" />
+                <p class="mt-2 text-sm text-orange-300" id="password-error">{{ errors.password }}</p>
             </div>
           </div>
 
           <div>
             <label for="passwordConfirmation" class="block text-sm/6 font-medium text-gray-900">Password Confirmation</label>
             <div class="mt-2">
-              <input v-model="passwordConfirmation" id="passwordConfirmation" name="passwordConfirmation" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" />
+              <Field
+                v-model="passwordConfirmation"
+                id="passwordConfirmation"
+                name="passwordConfirmation"
+                type="password"
+                autocomplete="passwordConfirmation"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :validation-schema="schema"
+                :class="[ errors.passwordConfirmation ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }" />
+                <p class="mt-2 text-sm text-orange-300" id="passwordConfirmation-error">{{ errors.passwordConfirmation }}</p>
             </div>
           </div>
 
@@ -47,7 +86,7 @@
           <div>
             <button type="submit" class="flex w-full justify-center px-3 py-5 rounded-md bg-gray-800 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">Create Account</button>
           </div>
-        </form>
+        </Form>
       </div>
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
@@ -66,6 +105,8 @@ import apiRequester from '@/services/requester';
 import logoUrl from '@/assets/img/logo.png'
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
+import { Form, Field, defineRule } from 'vee-validate';
+import { required, max, min, confirmed, email as emailRule } from '@vee-validate/rules';
 
 const name = ref("");
 const email = ref("");
@@ -74,6 +115,19 @@ const passwordConfirmation = ref("");
 const modalRef = useTemplateRef('modal')
 const router = useRouter()
 const globalStore = useGlobalStore()
+
+defineRule('required', required);
+defineRule('max', max);
+defineRule('min', min);
+defineRule('email', emailRule);
+defineRule('confirmed', confirmed);
+
+const schema = {
+  name: 'required|max:200',
+  email: 'required|email|max:200',
+  password: 'required|min:8|password',
+  passwordConfirmation: 'required|confirmed:@password'
+};
 
 const login = async () => {
   apiRequester.post('/api/account', {
@@ -90,14 +144,14 @@ const login = async () => {
       })
     })
     .catch(error => {
-      switch (error.code) {
-        case 'ERR_BAD_REQUEST':
-          modalRef.value.showModal(
-            'Wrong Credentias',
-            'warning',
-            'validation erros'
-          )
-          break;
+      switch (error.response.status) {
+        case 422:
+        modalRef.value.showModal(
+          'Validation Error',
+          'warning',
+          error.response.data.message
+        )
+        break;
       
         default:
           modalRef.value.apiDownResponse()
