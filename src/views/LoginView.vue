@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <img class="mx-auto h-10 w-auto" :src="logoUrl" alt="Your Company" />
+      <img class="mx-auto h-10 w-auto" :src="logoUrl" alt="Ressonance Logo" />
       <h2 class="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
     </div>
 
@@ -24,17 +24,17 @@
 
           <div class="flex items-center justify-between">
             <div class="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" class="size-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+              <input id="remember-me" name="remember-me" type="checkbox" class="size-4 rounded border-gray-300 text-gray-900" />
               <label for="remember-me" class="ml-3 block text-sm/6 text-gray-900">Remember me</label>
             </div>
 
             <div class="text-sm/6">
-              <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+              <a href="#" class="font-semibold text-gray-900 hover:text-gray-500 underline">Forgot password?</a>
             </div>
           </div>
 
           <div>
-            <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
+            <button type="submit" class="flex w-full justify-center px-3 py-5 rounded-md bg-gray-800 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">Sign in</button>
           </div>
         </form>
 
@@ -72,7 +72,7 @@
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Not a member?
         {{ ' ' }}
-        <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Create an account for free.</a>
+        <RouterLink class="font-semibold text-gray-900 hover:text-gray-500" to="create-account">Create an account for free.</RouterLink>
       </p>
     </div>
 
