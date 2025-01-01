@@ -29,7 +29,7 @@
             </div>
 
             <div class="text-sm/6">
-              <a href="#" class="font-semibold text-gray-900 hover:text-gray-500 underline">Forgot password?</a>
+              <RouterLink class="font-semibold text-gray-900 hover:text-gray-500 underline" to="forgot-password">Forgot password?</RouterLink>
             </div>
           </div>
 
