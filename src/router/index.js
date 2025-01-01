@@ -7,6 +7,7 @@ import Dashboard from "@/views/dashboard/Dashboard.vue";
 import LoginView from "@/views/LoginView.vue";
 import CreateAccount from "@/views/CreateAccount.vue";
 import ForgotPassword from "@/views/ForgotPassword.vue";
+import ResetPassword from "@/views/ResetPassword.vue";
 import EmailVerificationCallOut from "@/views/EmailVerificationCallOut.vue";
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
@@ -64,6 +65,11 @@ const router = createRouter({
       path: "/forgot-password",
       name: "forgot-password",
       component: ForgotPassword,
+    },
+    {
+      path: "/reset-password",
+      name: "reset-password",
+      component: ResetPassword,
     },
     {
       path: "/modal",
