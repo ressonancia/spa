@@ -7,18 +7,38 @@
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
       <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-        <form @submit.prevent="login" class="space-y-6">
+        <Form @submit="login" class="space-y-6" :validation-schema="schema" v-slot="{ errors }">
           <div>
             <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
             <div class="mt-2">
-              <input v-model="email" id="email" name="email" type="email" autocomplete="email" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" />
+              <Field
+                v-model="email"
+                id="email"
+                name="email"
+                type="text"
+                autocomplete="email"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :validation-schema="schema"
+                :class="[ errors.email ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }" />
+                <p class="mt-2 text-sm text-orange-300" id="email-error">{{ errors.email }}</p>
             </div>
           </div>
 
           <div>
             <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
             <div class="mt-2">
-              <input v-model="password" id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" />
+              <Field
+                v-model="password"
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="password"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :validation-schema="schema"
+                :class="[ errors.password ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }" />
+                <p class="mt-2 text-sm text-orange-300" id="password-error">{{ errors.password }}</p>
             </div>
           </div>
 
@@ -36,7 +56,7 @@
           <div>
             <button type="submit" class="flex w-full justify-center px-3 py-5 rounded-md bg-gray-800 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">Sign in</button>
           </div>
-        </form>
+        </Form>
 
         <!-- <div>
           <div class="relative mt-10">
@@ -87,12 +107,22 @@ import apiRequester from '@/services/requester';
 import logoUrl from '@/assets/img/logo.png'
 import { useGlobalStore } from "@/stores/global";
 import Modal from "@/views/modals/Modal.vue";
+import { required, email as emailRule } from '@vee-validate/rules';
+import { Form, Field, defineRule } from 'vee-validate';
 
 const email = ref("");
 const password = ref("");
-const router = useRouter()
-const globalStore = useGlobalStore()
-const modalRef = useTemplateRef('modal')
+const router = useRouter();
+const globalStore = useGlobalStore();
+const modalRef = useTemplateRef('modal');
+
+defineRule('required', required);
+defineRule('email', emailRule);
+
+const schema = {
+  email: 'required|email',
+  password: 'required',
+};
 
 const login = async () => {
   apiRequester.post('/oauth/token', {
