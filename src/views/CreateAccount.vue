@@ -137,7 +137,6 @@ const login = async () => {
       password_confirmation: passwordConfirmation.value,
     })
     .then( (response) => {
-      console.log(response)
       globalStore.login(response.data.access_token)
       router.push({
         name: 'email-verification'

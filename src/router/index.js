@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ProjectListView from "@/views/dashboard/ProjectListView.vue";
 import CreateProjectView from "@/views/dashboard/CreateProjectView.vue";
+import ChangePassword from "@/views/dashboard/ChangePassword.vue";
 import ProjectViewSettings from "@/views/dashboard/ProjectViewSettings.vue";
 import ProjectViewStats from "@/views/dashboard/ProjectViewStats.vue";
 import Dashboard from "@/views/dashboard/Dashboard.vue";
@@ -9,7 +10,6 @@ import CreateAccount from "@/views/CreateAccount.vue";
 import ForgotPassword from "@/views/ForgotPassword.vue";
 import ResetPassword from "@/views/ResetPassword.vue";
 import EmailVerificationCallOut from "@/views/EmailVerificationCallOut.vue";
-import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
 
 const router = createRouter({
@@ -44,6 +44,11 @@ const router = createRouter({
           name: "projectSettings",
           component: ProjectViewSettings,
         },
+        {
+          path: "settings/change-password",
+          name: "change-password",
+          component: ChangePassword,
+        }
       ]
     },
     {
@@ -70,11 +75,6 @@ const router = createRouter({
       path: "/reset-password",
       name: "reset-password",
       component: ResetPassword,
-    },
-    {
-      path: "/modal",
-      name: "modal",
-      component: Modal,
     }
   ],
 });
