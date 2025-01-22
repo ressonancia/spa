@@ -25,11 +25,12 @@
                       class="sr-only">, {{ client.name }}</span>
                   </router-link>
                 </MenuItem>
-                <!-- <MenuItem v-slot="{ active }">
-                <a href="#"
-                  :class="[active ? 'bg-gray-50' : '', 'block px-3 py-1 text-sm leading-6 text-gray-900']">Edit<span
-                    class="sr-only">, {{ client.name }}</span></a>
-                </MenuItem> -->
+                <MenuItem v-slot="{ active }">
+                  <router-link
+                    :to="{name:'delete-project',params: {project:client.routeId }, query: {projectName: client.name}}"
+                    :class="[active ? 'bg-gray-50' : '', 'block px-3 py-1 text-sm leading-6 text-gray-900']">Deletar Projeto
+                  </router-link>
+                </MenuItem>
               </MenuItems>
             </transition>
           </Menu>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ProjectListView from "@/views/dashboard/ProjectListView.vue";
 import CreateProjectView from "@/views/dashboard/CreateProjectView.vue";
+import DeleteProjectView from "@/views/dashboard/DeleteProjectView.vue";
 import ChangePassword from "@/views/dashboard/ChangePassword.vue";
 import ProjectViewSettings from "@/views/dashboard/ProjectViewSettings.vue";
 import ProjectViewStats from "@/views/dashboard/ProjectViewStats.vue";
@@ -43,6 +44,11 @@ const router = createRouter({
           path: ":project/settings",
           name: "projectSettings",
           component: ProjectViewSettings,
+        },
+        {
+          path: ":project/delete",
+          name: "delete-project",
+          component: DeleteProjectView,
         },
         {
           path: "settings/change-password",
