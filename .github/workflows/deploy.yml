@@ -33,6 +33,7 @@ jobs:
 
       # Step 5: Deploy using the deploy script
       - name: Deploy to Server
+        shell: /usr/bin/bash -e {0}
         env:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
