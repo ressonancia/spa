@@ -26,6 +26,9 @@ jobs:
 
       # Step 4: Build the Vue.js application
       - name: Build Application
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_API_CLIENT_SECRET: ${{ secrets.VITE_API_CLIENT_SECRET }}
         run: npm run build
 
       # Step 5: Deploy using the deploy script
@@ -41,9 +44,4 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $REMOTE_HOST >> ~/.ssh/known_hosts
-
-          # Make the deploy script executable
-          chmod +x deploy_vue.sh
-
-          # Call the deploy script
-          ./deploy_vue.sh
+          scp -i ~/.ssh/id_rsa -r dist/* $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH
