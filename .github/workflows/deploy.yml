@@ -33,7 +33,6 @@ jobs:
 
       # Step 5: Deploy using the deploy script
       - name: Deploy to Server
-        shell: /usr/bin/bash -e {0}
         env:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
@@ -41,8 +40,8 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           # Configure SSH
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $REMOTE_HOST >> ~/.ssh/known_hosts
+          which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+          eval $(ssh-agent -s)
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
           scp -i ~/.ssh/id_rsa -r dist/* $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH
