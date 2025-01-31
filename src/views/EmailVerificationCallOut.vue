@@ -34,7 +34,7 @@ const globalStore = useGlobalStore()
 isLoggedIn.value = globalStore.isLoggedIn
 
 if (routeParam) {
-    apiRequester.post(atob(routeParam)).then(() => {
+    apiRequester.post(atob(decodeURIComponent(routeParam))).then(() => {
         modalRef.value.showModal(
             'Account Activated',
             'success',
