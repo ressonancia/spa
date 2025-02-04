@@ -1,8 +1,12 @@
 <template>
 	<div>
 		<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">API Key</h1>
-		<p class="mt-6 text-xl leading-8">Use this API Key to authenticate and sent messages to Ressonance at the server
-			side</p>
+		<p class="mt-6 text-xl leading-8">Use this API Key to authenticate and sent messages to Ressonance at the server side.
+			<br> For more instructions follow the <a target="_blank" class="text-orange-600 hover:text-orange-900" href="https://laravel.com/docs/11.x/broadcasting#client-reverb">Laravel Documentation.</a></p>
+
+		<div class="mt-10">
+			<CopyField value="https://websocket.l30.space">Websocket Host</CopyField>
+		</div>
 
 		<div class="mt-10">
 			<CopyField :value="app.app_id">App ID</CopyField>
@@ -16,9 +20,7 @@
 			<CopyField hide="true" :value="app.app_secret">App Secret</CopyField>
 		</div>
 
-		<figure class="mt-16">
-		</figure>
-		<div class="mt-16 max-w-2xl">
+		<!-- <div class="mt-16 max-w-2xl">
 			<h2 class="text-2xl tracking-tight text-gray-900">Install the SDK on your application
 			</h2>
 			<CodeSnippet>composer require ressonance/sdk</CodeSnippet>
@@ -34,7 +36,7 @@
 			<h2 class="text-2xl tracking-tight text-gray-900">Send a message
 			</h2>
 			<CodeSnippet>composer require ressonance/sdk</CodeSnippet>
-		</div>
+		</div> -->
 
 		<Modal ref="modal" />
 	</div>
