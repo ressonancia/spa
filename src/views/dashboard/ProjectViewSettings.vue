@@ -46,7 +46,6 @@
 import { useRoute } from "vue-router";
 import { ref, useTemplateRef } from 'vue'
 import apiRequester from '@/services/requester';
-import CodeSnippet from '@/components/CodeSnippet.vue';
 import CopyField from '@/components/CopyField.vue';
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
