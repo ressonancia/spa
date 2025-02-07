@@ -49,6 +49,7 @@ import Modal from "@/views/modals/Modal.vue";
 import { Form, Field, defineRule } from 'vee-validate';
 import { required, max, email as emailRule } from '@vee-validate/rules';
 
+const email = ref("");
 const modalRef = useTemplateRef('modal')
 
 defineRule('required', required);
