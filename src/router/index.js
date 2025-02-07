@@ -61,31 +61,49 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: LoginView,
+      meta: {
+        transition: "slide-fade"
+      }
     },
     {
       path: "/login",
       name: "login",
       component: LoginView,
+      meta: {
+        transition: "slide-fade"
+      }
     },
     {
       path: "/create-account",
       name: "create-account",
       component: CreateAccount,
+      meta: {
+        transition: "slide-fade"
+      }
     },
     {
       path: "/email-verification",
       name: "email-verification",
       component: EmailVerificationCallOut,
+      meta: {
+        transition: "slide-fade"
+      }
     },
     {
       path: "/forgot-password",
       name: "forgot-password",
       component: ForgotPassword,
+      meta: {
+        transition: "slide-fade"
+      }
     },
     {
       path: "/reset-password",
       name: "reset-password",
       component: ResetPassword,
+      meta: {
+        transition: "slide-fade"
+      }
     }
   ],
 });
