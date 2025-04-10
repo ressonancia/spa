@@ -3,7 +3,7 @@
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <img class="mx-auto h-10 w-auto" :src="logoUrl" alt="Ressonance Logo" />
       <h2 class="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Forgot Password?</h2>
-      <p class="mt-6 text-center text-gray-900">Dont worries. We will send you reset instructions.</p>
+      <p class="px-6 mt-6 text-center text-gray-900">Dont worries. We will send you reset instructions.</p>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">

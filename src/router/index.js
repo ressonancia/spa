@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import ProjectListView from "@/views/dashboard/ProjectListView.vue";
 import CreateProjectView from "@/views/dashboard/CreateProjectView.vue";
 import DeleteProjectView from "@/views/dashboard/DeleteProjectView.vue";
-import ChangePassword from "@/views/dashboard/ChangePassword.vue";
+import Settings from "@/views/dashboard/Settings.vue";
 import ProjectViewSettings from "@/views/dashboard/ProjectViewSettings.vue";
 import ProjectViewStats from "@/views/dashboard/ProjectViewStats.vue";
 import Dashboard from "@/views/dashboard/Dashboard.vue";
@@ -51,9 +51,9 @@ const router = createRouter({
           component: DeleteProjectView,
         },
         {
-          path: "settings/change-password",
-          name: "change-password",
-          component: ChangePassword,
+          path: "settings",
+          name: "settings",
+          component: Settings,
         }
       ]
     },

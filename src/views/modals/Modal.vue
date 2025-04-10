@@ -55,7 +55,7 @@ const type = ref('')
 const description = ref('')
 const button = ref(false)
 const buttonText = ref('')
-const buttonRoute = ref('')
+const buttonAction = ref('')
 
 const router = useRouter()
 
@@ -73,22 +73,29 @@ const showModal = (
     open.value = true
     button.value = modalButton
     buttonText.value = modalButtonText
-    buttonRoute.value = modalButtonRoute
+    buttonAction.value = modalButtonRoute
 }
 
 const goto = () => {
-    if (buttonRoute.value) {
+    if (typeof buttonAction.value === 'function') {
+        buttonAction.value();
+        return true
+    }
+
+    if (buttonAction.value) {
         router.push({
-            name: buttonRoute.value
+            name: buttonAction.value
         })
     }
+
+    return true;
 }
 
 const apiDownResponse = () => {
     showModal(
 		'Something is wrong',
 		'danger',
-		'Our API is not responding properly. Our team is working on it just try again latter.'
+		'Our API is not responding properly. Our team is working on it. Just try again latter.'
 	)
 }
 

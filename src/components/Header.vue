@@ -46,7 +46,7 @@
                                         <MenuItem v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
-                                                to="/dashboard/settings/change-password">Settings</RouterLink>
+                                                to="/dashboard/settings">Settings</RouterLink>
                                         </MenuItem>
                                         <MenuItem @click="logout" v-slot="{ active }">
                                             <a href="#"
