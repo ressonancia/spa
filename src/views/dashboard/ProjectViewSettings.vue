@@ -5,7 +5,7 @@
 			<br> For more instructions follow the <a target="_blank" class="text-orange-600 hover:text-orange-900" href="https://laravel.com/docs/11.x/broadcasting#client-reverb">Laravel Documentation.</a></p>
 
 		<div class="mt-10">
-			<CopyField value="https://websocket.l30.space">Websocket Host</CopyField>
+			<CopyField value="https://websocket.ressonance.com">Websocket Host</CopyField>
 		</div>
 
 		<div class="mt-10">
