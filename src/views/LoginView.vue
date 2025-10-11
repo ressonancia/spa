@@ -2,7 +2,7 @@
   <div class="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <img class="mx-auto h-10 w-auto" :src="logoUrl" alt="Ressonance Logo" />
-      <h2 class="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+      <h2 class="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">{{ isSelfHosted ? 'Sign in to Self Hosted Ressonance' : 'Sign in to your account' }}</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
@@ -43,12 +43,12 @@
           </div>
 
           <div class="flex items-center justify-between">
-            <div class="flex items-center">
+            <div v-if="!isSelfHosted" class="flex items-center">
               <input id="remember-me" name="remember-me" type="checkbox" class="size-4 rounded border-gray-300 text-gray-900" />
               <label for="remember-me" class="ml-3 block text-sm/6 text-gray-900">Remember me</label>
             </div>
 
-            <div class="text-sm/6">
+            <div v-if="!isSelfHosted" class="text-sm/6">
               <RouterLink class="font-semibold text-gray-900 hover:text-gray-500 underline" to="forgot-password">Forgot password?</RouterLink>
             </div>
           </div>
@@ -89,7 +89,7 @@
         </div> -->
       </div>
 
-      <p class="mt-10 text-center text-sm/6 text-gray-500">
+      <p v-if="!isSelfHosted" class="mt-10 text-center text-sm/6 text-gray-500">
         Not a member?
         {{ ' ' }}
         <RouterLink class="font-semibold text-gray-900 hover:text-gray-500" to="create-account">Create an account for free.</RouterLink>
@@ -118,6 +118,8 @@ const modalRef = useTemplateRef('modal');
 
 defineRule('required', required);
 defineRule('email', emailRule);
+
+const isSelfHosted = import.meta.env.VITE_RESSONANCE_SELF_HOSTED === 'true'
 
 const schema = {
   email: 'required|email',

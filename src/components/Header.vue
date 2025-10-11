@@ -18,6 +18,10 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
+                            <a  v-if="isSelfHosted"
+                                href="#"
+                                @click="showRessonanceCloud"
+                                class="bg-gray-900 text-white rounded-md px-3 py-2 font-medium">Try Ressonance Cloud</a>
                             <!-- Profile dropdown -->
                             <Menu as="div" class="relative ml-3">
                                 <div>
@@ -75,6 +79,8 @@
                     <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href"
                         :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
                         :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+                    <DisclosureButton v-if="isSelfHosted" as="a" @click="showRessonanceCloud"
+                        class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium">Try Ressonance Cloud</DisclosureButton>
                 </div>
                 <div class="border-t border-gray-700 pb-3 pt-4">
                     <div class="flex items-center px-5">
@@ -100,6 +106,7 @@
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ headerLabel }}</h1>
             </div>
         </header>
+        <Modal v-if="isSelfHosted" ref="ressonanceCloud" />
     </div>
 </template>
 
@@ -122,20 +129,25 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useGlobalStore } from "@/stores/global";
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 import logoUrl from '@/assets/img/logo.png'
+import Modal from "@/views/modals/RessonanceCloudModal.vue";
 
 const router = useRouter()
 const route = useRoute()
 const globalStore = useGlobalStore()
 const headerLabel = ref('')
+const isSelfHosted = ref(true)
 const user = ref([])
+const ressonanceCloudModalRef = useTemplateRef('ressonanceCloud')
+
 globalStore.getUser().then((userData) => {
     user.value = userData
 })
 
 headerLabel.value = globalStore.headerLabel
+isSelfHosted.value = globalStore.isSelfHosted
 
 globalStore.$onAction((action) => {
     headerLabel.value = action.args[0] ?? 'Project'
@@ -152,9 +164,15 @@ const logout = () => {
     })
 }
 
+const showRessonanceCloud = () => {
+  ressonanceCloudModalRef.value.showModal()
+}
+
 const navigation = [
   { name: 'Projects', href: getRoutePathByName('projects'), current: route.name == 'projects' },
   { name: 'Create Project', href: getRoutePathByName('create-projects'), current: route.name == 'create-projects' },
 //   { name: 'Team', href: '#', current: false }
 ]
+
+const userNavigation = []
 </script>

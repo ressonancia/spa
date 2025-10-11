@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import apiRequester from '@/services/requester';
 
+
 export const useGlobalStore = defineStore("global", {
   state: () => {
     
@@ -11,6 +12,7 @@ export const useGlobalStore = defineStore("global", {
     return {
       headerLabel: 'Projects',
       isLoggedIn: validToken,
+      isSelfHosted: import.meta.env.VITE_RESSONANCE_SELF_HOSTED === 'true',
       token: token
     };
   },
