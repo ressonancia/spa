@@ -47,7 +47,7 @@
 											</a>
                                         </MenuItem>
 										<hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
-                                        <MenuItem v-slot="{ active }">
+                                        <MenuItem v-if="!isSelfHosted" v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 to="/dashboard/settings">Settings</RouterLink>
