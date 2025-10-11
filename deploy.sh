@@ -7,7 +7,7 @@ set -e
 BUILD_DIR="dist"
 LOCAL_BUILD_COMMAND="npm run build"
 REMOTE_USER="ressonance_spa"               # Replace with your remote server username
-REMOTE_HOST="10.0.0.136" # Replace with your server IP or domain
+REMOTE_HOST="10.0.0.180" # Replace with your server IP or domain
 REMOTE_PATH="/var/www/html/ressonance-spa"      # Path to the Nginx root on the server
 SSH_KEY_NAME="id_rsa_ressonance"      # Path to the Nginx root on the server
 
