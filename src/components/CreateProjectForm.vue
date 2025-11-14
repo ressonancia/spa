@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<div class="max-w-2xl mt-20">
-			<p for="name" class="block text-sm font-medium leading-6 text-gray-900 text-left">Project Name</p>
+			<Label for="appName" class="block text-sm font-medium leading-6 text-gray-900 text-left">Project Name</Label>
 			<div class="mt-2">
-				<input type="text" v-model="appName" name="appName" id="appName" :class="{
+				<Input type="text" v-model="appName" name="appName" id="appName" :class="{
 					'ring-gray-300': valid,
 					'ring-orange-500': !valid
 				}" class="block w-full rounded-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -12,11 +12,11 @@
 		</div>
 
 		<div class="mt-20">
-			<button @click="createProject" type="button"
+			<Button @click="createProject" type="button"
 				class="inline-flex items-center gap-x-2 rounded-md bg-gray-800  px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">
 				Create Project
 				<PlusIcon class="-ml-0.5 h-5 w-5" aria-hidden="true" />
-			</button>
+			</Button>
 		</div>
 
 		<Modal ref="modal" />
@@ -29,6 +29,9 @@ import { PlusIcon } from '@heroicons/vue/20/solid'
 import apiRequester from '@/services/requester';
 import { ref, useTemplateRef } from 'vue'
 import { useRouter } from "vue-router";
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 
 let router = useRouter()
 const modalRef = useTemplateRef('modal')

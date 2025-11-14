@@ -1,39 +1,32 @@
 <template>
   <ul v-if="clients.length > 0" role="list" class="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8">
     <li v-for="client in clients" :key="client.id" class="overflow-hidden rounded-xl border border-gray-200">
-      
-      <router-link :to="{name:'projectSettings', params: {project: client.routeId}}">
+      <router-link :to="{ name: 'projectSettings', params: { project: client.routeId } }">
         <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
           <img :src="client.imageUrl" :alt="client.name"
             class="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10" />
           <div class="text-sm font-medium leading-6 text-gray-900">{{ stringLimit(client.name) }}</div>
-          <Menu as="div" class="relative ml-auto">
-            <MenuButton class="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500">
+          <DropdownMenu class="relative ml-auto">
+            <DropdownMenuTrigger class="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500">
               <span class="sr-only">Open options</span>
               <EllipsisHorizontalIcon class="h-5 w-5" aria-hidden="true" />
-            </MenuButton>
-            <transition enter-active-class="transition ease-out duration-100"
-              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
-              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
-              leave-to-class="transform opacity-0 scale-95">
-              <MenuItems
-                class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                <MenuItem v-slot="{ active }">
-                  <router-link
-                    :to="{name:'projectSettings',params: {project:client.routeId }}"
-                    :class="[active ? 'bg-gray-50' : '', 'block px-3 py-1 text-sm leading-6 text-gray-900']">View<span
-                      class="sr-only">, {{ client.name }}</span>
-                  </router-link>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <router-link
-                    :to="{name:'delete-project',params: {project:client.routeId }, query: {projectName: client.name}}"
-                    :class="[active ? 'bg-gray-50' : '', 'block px-3 py-1 text-sm leading-6 text-gray-900']">Deletar Projeto
-                  </router-link>
-                </MenuItem>
-              </MenuItems>
-            </transition>
-          </Menu>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+              <DropdownMenuItem>
+                <router-link :to="{ name: 'projectSettings', params: { project: client.routeId } }"
+                  class="block px-3 py-1 text-sm leading-6 text-gray-900">View<span class="sr-only">, {{ client.name
+                  }}</span>
+                </router-link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <router-link
+                  :to="{ name: 'delete-project', params: { project: client.routeId }, query: { projectName: client.name } }"
+                  class="block px-3 py-1 text-sm leading-6 text-gray-900">Deletar Projeto
+                </router-link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </router-link>
       <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
@@ -51,16 +44,20 @@
         </div>
       </dl>
     </li>
-
   </ul>
 
   <Modal v-if="clients.length <= 0" ref="modal" />
 
-  <CreateProjectForm  v-if="clients.length == 0" />
+  <CreateProjectForm v-if="clients.length == 0" />
 </template>
 
 <script setup>
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 import CreateProjectForm from '@/components/CreateProjectForm.vue';
 import Modal from "@/views/modals/Modal.vue";
@@ -83,7 +80,7 @@ apiRequester.get(`${import.meta.env.VITE_API_URL}/api/apps`)
         imageUrl: laravelLogoUrl,
         created_at: DateTime.fromISO(app.created_at).toFormat("yyyy-M-d")
       })
-    });    
+    });
   }).catch(function (error) {
     modalRef.value.apiDownResponse()
   })
