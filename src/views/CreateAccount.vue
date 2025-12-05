@@ -99,14 +99,15 @@
 </template>
 
 <script setup>
-import { ref, useTemplateRef } from "vue";
-import { useRouter } from "vue-router";
+import { ref, useTemplateRef, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import apiRequester from '@/services/requester';
 import logoUrl from '@/assets/img/logo.png'
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
 import { Form, Field, defineRule } from 'vee-validate';
 import { required, max, min, confirmed, email as emailRule } from '@vee-validate/rules';
+import { useToast } from '@/components/ui/toast/use-toast'
 
 const name = ref("");
 const email = ref("");
@@ -114,7 +115,17 @@ const password = ref("");
 const passwordConfirmation = ref("");
 const modalRef = useTemplateRef('modal')
 const router = useRouter()
+const route = useRoute()
 const globalStore = useGlobalStore()
+const { toast } = useToast()
+
+onMounted(() => {
+  if (route.query.payment_confirmed === 'true') {
+    toast({
+      description: "Thanks for your subscription! We're currently setting up your experience",
+    })
+  }
+})
 
 defineRule('required', required);
 defineRule('max', max);
