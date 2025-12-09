@@ -51,8 +51,11 @@ import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
 import { stringLimit } from '@/services/utils';
 
+
 const globalStore = useGlobalStore();
 const modalRef = useTemplateRef('modal')
+
+const websocketHost = import.meta.env.VITE_WEBSOCKET_HOST;
 
 let app = ref({})
 const route = useRoute();
