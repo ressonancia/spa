@@ -27,8 +27,9 @@
                 autocomplete="name"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 :class="[ errors.name ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }" 
               />
-              <p class="mt-2 text-sm text-orange-300">{{ errors.name }}</p>
+              <p class="mt-2 text-sm text-orange-300" id="name-error">{{ errors.name }}</p>
             </div>
           </div>
 
@@ -43,6 +44,7 @@
                 autocomplete="email"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 :class="[ errors.email ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }"
               />
               <p class="mt-2 text-sm text-orange-300" id="email-error">{{ errors.email }}</p>
             </div>
@@ -59,6 +61,7 @@
                 autocomplete="password"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 :class="[ errors.password ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }"
               />
               <p class="mt-2 text-sm text-orange-300" id="password-error">{{ errors.password }}</p>
             </div>
@@ -75,6 +78,7 @@
                 autocomplete="passwordConfirmation"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 :class="[ errors.passwordConfirmation ? 'ring-orange-300' : 'ring-gray-300' ]"
+                v-slot="{ errors }"
               />
               <p class="mt-2 text-sm text-orange-300" id="passwordConfirmation-error">{{ errors.passwordConfirmation }}</p>
             </div>
