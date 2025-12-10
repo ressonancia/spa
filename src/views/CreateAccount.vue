@@ -2,7 +2,7 @@
   <div class="flex flex-col justify-center flex-1 min-h-full py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <img class="w-auto h-10 mx-auto" :src="logoUrl" alt="Ressonance Logo" />
-      <h2 class="mt-6 font-bold tracking-tight text-center text-gray-900 text-2xl/9">Create a new account</h2>
+      <h2 class="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9">Create a new account</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
@@ -110,7 +110,7 @@
 import { ref, useTemplateRef, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import apiRequester from '@/services/requester';
-import logoUrl from '@/assets/img/logo.png'
+import logoUrl from '@/assets/img/logo-text.png'
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
 import { Form, Field, defineRule } from 'vee-validate';

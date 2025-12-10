@@ -2,7 +2,7 @@
   <div class="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <img class="mx-auto h-10 w-auto" :src="logoUrl" alt="Ressonance Logo" />
-      <h2 class="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">{{ isSelfHosted ? 'Sign in to Self Hosted Ressonance' : 'Sign in to your account' }}</h2>
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">{{ isSelfHosted ? 'Access Self Hosted Instance' : 'Sign in to your account' }}</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
@@ -104,7 +104,7 @@
 import { ref, useTemplateRef } from "vue";
 import { useRouter } from "vue-router";
 import apiRequester from '@/services/requester';
-import logoUrl from '@/assets/img/logo.png'
+import logoUrl from '@/assets/img/logo-text.png'
 import { useGlobalStore } from "@/stores/global";
 import Modal from "@/views/modals/Modal.vue";
 import { required, email as emailRule } from '@vee-validate/rules';
