@@ -15,6 +15,7 @@
 
       <div class="px-6 py-12 bg-white shadow sm:rounded-lg sm:px-12">
         <Form @submit="login" class="space-y-6" :validation-schema="schema" v-slot="{ errors }">
+          
           <div>
             <label for="name" class="block font-medium text-gray-900 text-sm/6">Name</label>
             <div class="mt-2">
@@ -26,11 +27,66 @@
                 autocomplete="name"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 :class="[ errors.name ? 'ring-orange-300' : 'ring-gray-300' ]"
-               />
-              <p class="mt-2 text-sm text-orange-300" id="email-error">{{ errors.name }}</p>
+              />
+              <p class="mt-2 text-sm text-orange-300">{{ errors.name }}</p>
             </div>
           </div>
-          
+
+          <div>
+            <label for="email" class="block font-medium text-gray-900 text-sm/6">Email address</label>
+            <div class="mt-2">
+              <Field
+                v-model="email"
+                id="email"
+                name="email"
+                type="text"
+                autocomplete="email"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :class="[ errors.email ? 'ring-orange-300' : 'ring-gray-300' ]"
+              />
+              <p class="mt-2 text-sm text-orange-300" id="email-error">{{ errors.email }}</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="password" class="block font-medium text-gray-900 text-sm/6">Password</label>
+            <div class="mt-2">
+              <Field
+                v-model="password"
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="password"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :class="[ errors.password ? 'ring-orange-300' : 'ring-gray-300' ]"
+              />
+              <p class="mt-2 text-sm text-orange-300" id="password-error">{{ errors.password }}</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="passwordConfirmation" class="block font-medium text-gray-900 text-sm/6">Password Confirmation</label>
+            <div class="mt-2">
+              <Field
+                v-model="passwordConfirmation"
+                id="passwordConfirmation"
+                name="passwordConfirmation"
+                type="password"
+                autocomplete="passwordConfirmation"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                :class="[ errors.passwordConfirmation ? 'ring-orange-300' : 'ring-gray-300' ]"
+              />
+              <p class="mt-2 text-sm text-orange-300" id="passwordConfirmation-error">{{ errors.passwordConfirmation }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input checked="true" id="news" name="news" type="checkbox" class="text-gray-900 border-gray-300 rounded size-4" />
+              <label for="news" class="block ml-3 text-gray-900 text-sm/6">I want to receive news by email</label>
+            </div>
+          </div>
+
           <div>
             <button type="submit" class="flex justify-center w-full px-3 py-5 text-sm font-semibold text-white bg-gray-800 rounded-md shadow-sm hover:bg-gray-700">Create Account</button>
           </div>
@@ -67,7 +123,6 @@ const router = useRouter()
 const route = useRoute()
 const globalStore = useGlobalStore()
 
-
 const showPaymentAlert = ref(false);
 
 defineRule('required', required);
@@ -86,8 +141,6 @@ const schema = {
 onMounted(() => {
   if (route.query.payment_confirmed === 'true') {
     showPaymentAlert.value = true;
-    
-    router.replace({ query: null }); 
   }
 });
 
