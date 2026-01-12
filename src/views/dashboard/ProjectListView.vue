@@ -28,7 +28,7 @@
                 <MenuItem v-slot="{ active }">
                   <router-link
                     :to="{name:'delete-project',params: {project:client.routeId }, query: {projectName: client.name}}"
-                    :class="[active ? 'bg-gray-50' : '', 'block px-3 py-1 text-sm leading-6 text-gray-900']">Deletar Projeto
+                    :class="[active ? 'bg-gray-50' : '', 'block px-3 py-1 text-sm leading-6 text-gray-900']">Delete Project
                   </router-link>
                 </MenuItem>
               </MenuItems>
