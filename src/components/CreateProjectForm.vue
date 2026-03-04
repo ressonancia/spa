@@ -18,7 +18,13 @@
 					<div class="relative">
 						<ListboxButton
 							class="relative w-full cursor-pointer rounded-md border-0 bg-white py-5 pl-3 pr-10 text-left ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-							<span :class="{ 'text-gray-400': !chosenLanguage }" class="block truncate">
+							<span :class="{ 'text-gray-400': !chosenLanguage }" class="flex items-center gap-2 truncate">
+								<img
+									v-if="selectedLanguage"
+									:src="selectedLanguage.logoUrl"
+									:alt="selectedLanguage.label"
+									class="h-5 w-5 rounded-sm object-cover"
+								/>
 								{{ selectedLanguageLabel }}
 							</span>
 							<span class="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -30,18 +36,18 @@
 							<ListboxOptions
 								class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
 								<ListboxOption
-									v-for="language in languageOptions" :key="language.value" :value="language.value"
+									v-for="stack in stackOptions" :key="stack.value" :value="stack.value"
 									v-slot="{ active, selected }" as="template">
 									<li :class="[active ? 'bg-gray-800 text-white' : 'text-gray-900','relative cursor-pointer select-none py-2 pl-3 pr-9']">
 										<span :class="[
 											selected ? 'font-semibold' : 'font-normal',
 											'block truncate'
 										]">
-											{{ language.label }}
+											{{ stack.label }}
 										</span>
 
 										<span class="absolute inset-y-0 right-0 flex items-center pr-4">
-											<img :src="laravelLogoUrl" alt="Laravel" class="h-5 w-5 rounded-sm object-cover" />
+											<img :src="stack.logoUrl" :alt="stack.label" class="h-5 w-5 rounded-sm object-cover" />
 										</span>
 									</li>
 								</ListboxOption>
@@ -71,20 +77,42 @@ import { ChevronUpDownIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import apiRequester from '@/services/requester';
 import { computed, ref, useTemplateRef } from 'vue'
 import { useRouter } from "vue-router";
+import djangoLogoUrl from '@/assets/img/django.png'
+import dotNetLogoUrl from '@/assets/img/dot-net.png'
+import flaskLogoUrl from '@/assets/img/flask.png'
+import golangLogoUrl from '@/assets/img/golang.png'
+import javaLogoUrl from '@/assets/img/java.png'
 import laravelLogoUrl from '@/assets/img/laravel.png'
+import nodeLogoUrl from '@/assets/img/node.png'
+import phpLogoUrl from '@/assets/img/php.png'
+import pythonLogoUrl from '@/assets/img/python.png'
+import symfonyLogoUrl from '@/assets/img/symfony.png'
+import wordpressLogoUrl from '@/assets/img/wordpress.png'
 
 let router = useRouter()
 const modalRef = useTemplateRef('modal')
 
 const chosenLanguage = ref('')
-const languageOptions = [
-	{ value: 'php', label: 'PHP' },
-	{ value: 'javascript', label: 'JavaScript' },
-	{ value: 'python', label: 'Python' },
-	{ value: 'java', label: 'Java' }
+const stackOptions = [
+	{ value: 'django', label: 'Django', logoUrl: djangoLogoUrl },
+	{ value: 'dot-net', label: 'Dot NET', logoUrl: dotNetLogoUrl },
+	{ value: 'flask', label: 'Flask', logoUrl: flaskLogoUrl },
+	{ value: 'golang', label: 'Golang', logoUrl: golangLogoUrl },
+	{ value: 'java', label: 'Java', logoUrl: javaLogoUrl },
+	{ value: 'laravel', label: 'Laravel', logoUrl: laravelLogoUrl },
+	{ value: 'node', label: 'Node', logoUrl: nodeLogoUrl },
+	{ value: 'php', label: 'PHP', logoUrl: phpLogoUrl },
+	{ value: 'python', label: 'Python', logoUrl: pythonLogoUrl },
+	{ value: 'symfony', label: 'Symfony', logoUrl: symfonyLogoUrl },
+	{ value: 'wordpress', label: 'Wordpress', logoUrl: wordpressLogoUrl }
 ]
+
+const selectedLanguage = computed(() => {
+	return stackOptions.find((stack) => stack.value === chosenLanguage.value) ?? null
+})
+
 const selectedLanguageLabel = computed(() => {
-	return languageOptions.find((language) => language.value === chosenLanguage.value)?.label ?? 'Select your backend stack'
+	return selectedLanguage.value?.label ?? 'Select your backend stack'
 })
 const appName = ref('')
 const valid = ref(true)
