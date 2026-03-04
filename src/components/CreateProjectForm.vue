@@ -40,8 +40,8 @@
 											{{ language.label }}
 										</span>
 
-										<span v-if="selected" class="absolute inset-y-0 right-0 flex items-center pr-4">
-											<CheckIcon class="h-5 w-5 text-orange-500" aria-hidden="true" />
+										<span class="absolute inset-y-0 right-0 flex items-center pr-4">
+											<img :src="laravelLogoUrl" alt="Laravel" class="h-5 w-5 rounded-sm object-cover" />
 										</span>
 									</li>
 								</ListboxOption>
@@ -67,10 +67,11 @@
 <script setup>
 import Modal from "@/views/modals/Modal.vue";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
-import { CheckIcon, ChevronUpDownIcon, PlusIcon } from '@heroicons/vue/20/solid'
+import { ChevronUpDownIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import apiRequester from '@/services/requester';
 import { computed, ref, useTemplateRef } from 'vue'
 import { useRouter } from "vue-router";
+import laravelLogoUrl from '@/assets/img/laravel.png'
 
 let router = useRouter()
 const modalRef = useTemplateRef('modal')
@@ -83,7 +84,7 @@ const languageOptions = [
 	{ value: 'java', label: 'Java' }
 ]
 const selectedLanguageLabel = computed(() => {
-	return languageOptions.find((language) => language.value === chosenLanguage.value)?.label ?? 'Select a language'
+	return languageOptions.find((language) => language.value === chosenLanguage.value)?.label ?? 'Select your backend stack'
 })
 const appName = ref('')
 const valid = ref(true)
