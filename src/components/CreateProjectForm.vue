@@ -23,7 +23,7 @@
 									v-if="selectedLanguage"
 									:src="selectedLanguage.logoUrl"
 									:alt="selectedLanguage.label"
-									class="h-5 w-5 rounded-sm object-cover"
+									class="h-6 w-6 rounded-sm object-cover"
 								/>
 								{{ selectedLanguageLabel }}
 							</span>
@@ -34,20 +34,20 @@
 
 						<transition leave-active-class="transition duration-100 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
 							<ListboxOptions
-								class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+								class="absolute z-10 mt-1 max-h-80 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
 								<ListboxOption
 									v-for="stack in stackOptions" :key="stack.value" :value="stack.value"
 									v-slot="{ active, selected }" as="template">
-									<li :class="[active ? 'bg-gray-800 text-white' : 'text-gray-900','relative cursor-pointer select-none py-2 pl-3 pr-9']">
+									<li :class="[active ? 'bg-gray-800 text-white' : 'text-gray-900','relative cursor-pointer select-none py-4 pl-5 pr-16']">
 										<span :class="[
 											selected ? 'font-semibold' : 'font-normal',
-											'block truncate'
+											'block truncate text-base'
 										]">
 											{{ stack.label }}
 										</span>
 
-										<span class="absolute inset-y-0 right-0 flex items-center pr-4">
-											<img :src="stack.logoUrl" :alt="stack.label" class="h-5 w-5 rounded-sm object-cover" />
+										<span class="absolute inset-y-0 right-0 flex items-center pr-3">
+											<img :src="stack.logoUrl" :alt="stack.label" class="h-9 w-9 rounded-md object-cover" />
 										</span>
 									</li>
 								</ListboxOption>
