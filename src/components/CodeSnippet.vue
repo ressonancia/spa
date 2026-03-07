@@ -22,7 +22,7 @@ const props = defineProps({
 	},
 	filename: {
 		type: String,
-		default: '',
+		default: 'public-event.js',
 	},
 })
 

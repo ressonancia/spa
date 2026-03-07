@@ -95,7 +95,7 @@ const modalRef = useTemplateRef('modal')
 const chosenLanguage = ref('')
 const stackOptions = [
 	{ value: 'django', label: 'Django', logoUrl: djangoLogoUrl },
-	{ value: 'dot-net', label: 'Dot NET', logoUrl: dotNetLogoUrl },
+	{ value: 'dotnet', label: 'Dot NET', logoUrl: dotNetLogoUrl },
 	{ value: 'flask', label: 'Flask', logoUrl: flaskLogoUrl },
 	{ value: 'golang', label: 'Golang', logoUrl: golangLogoUrl },
 	{ value: 'java', label: 'Java', logoUrl: javaLogoUrl },
