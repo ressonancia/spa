@@ -1,28 +1,34 @@
 <template>
-	<div
-		class="mt-6 flex items-center justify-between text-white bg-gray-900 font-mono text-sm py-5 px-5 w-full rounded-md">
-		<div class="flex gap-1">
-			<span>$</span>
-			<span>
-				<slot></slot>
-			</span>
+	<div class="rounded-lg overflow-hidden border border-gray-700 shadow-xl">
+		<div class="bg-gray-800 text-gray-400 px-4 py-2 text-sm font-mono flex items-center justify-between border-b border-gray-700">
+			<span>{{ filename }}</span>
+			<button @click="copy" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs transition-colors">
+			Copy
+			</button>
 		</div>
-		<span class="flex text-white cursor-pointer w-5 h-5 hover:text-gray-400 duration-200"
-		@click="copy">
-			<ClipboardDocumentIcon />
-		</span>
+		<pre class="bg-gray-900 text-gray-100 px-6 overflow-x-auto">
+			<code class="font-mono text-sm">{{ code }}</code>
+		</pre>
 	</div>
 </template>
 
 <script setup>
-import { ClipboardDocumentIcon} from '@heroicons/vue/20/solid'
-import { useSlots } from 'vue'
+import { computed, useSlots } from 'vue'
+
+const props = defineProps({
+	code: {
+		type: String,
+		default: '',
+	},
+	filename: {
+		type: String,
+		default: '',
+	},
+})
 
 const slots = useSlots()
 
 const copy = () => {
-	navigator.clipboard.writeText(
-		slots.default().map(vnode => vnode.children).join('')
-	)
+	navigator.clipboard.writeText(props.code)
 }
 </script>
