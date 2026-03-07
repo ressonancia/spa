@@ -1,45 +1,44 @@
 <template>
-	<div>
-		<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">API Key</h1>
-		<p class="mt-6 text-xl leading-8">Use this API Key to authenticate and sent messages to Ressonance at the server side.
-			<br> For more instructions follow the <a target="_blank" class="text-orange-600 hover:text-orange-900" href="https://laravel.com/docs/11.x/broadcasting#client-reverb">Laravel Documentation.</a></p>
+	<DefaultTransition name="slide-fade" appear>
+		<div>
+			<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">API Key</h1>
+			<p class="mt-6 text-xl leading-8">Use this API Key to authenticate and sent messages to Ressonance at the server side.
+				<br> For more instructions follow the <a target="_blank" class="text-orange-600 hover:text-orange-900" href="https://laravel.com/docs/11.x/broadcasting#client-reverb">Laravel Documentation.</a></p>
 
-		<div class="mt-10">
-			<CopyField :value="websocketHost">Websocket Host</CopyField>
-		</div>
-
-		<div class="mt-10">
-			<CopyField :value="app.app_id">App ID</CopyField>
-		</div>
-
-		<div class="mt-10">
-			<CopyField :value="app.app_key">App Key</CopyField>
-		</div>
-
-		<div class="mt-10">
-			<CopyField hide="true" :value="app.app_secret">App Secret</CopyField>
-		</div>
-
-		<div class="mt-20">
-			<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">Frontend Integration</h1>
-			<p class="mt-6 text-xl leading-8">Simple frontend integration using Pusher open source library.</p>
-			<p class="text-xl leading-8">Put this code at the end of the body:</p>
-			<div class="my-8">
-				<CodeSnippet :code="frontendSnippet" filename="index.html" />
+			<div class="mt-10">
+				<CopyField :value="websocketHost">Websocket Host</CopyField>
 			</div>
-		</div>
 
-		<div class="mt-10">
-			<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">Backend Integration</h1>
-			<p class="mt-6 text-xl leading-8">Backend public channel simple example.</p>
-			<p class="text-xl leading-8">You know where to put this better than us:</p>
-			<div class="my-8">
-				<CodeSnippet :code="BackendSnippet" filename="public-event.php" />
+			<div class="mt-10">
+				<CopyField :value="app.app_id">App ID</CopyField>
 			</div>
-		</div>
 
-		<Modal ref="modal" />
-	</div>
+			<div class="mt-10">
+				<CopyField :value="app.app_key">App Key</CopyField>
+			</div>
+
+			<div class="mt-10">
+				<CopyField hide="true" :value="app.app_secret">App Secret</CopyField>
+			</div>
+			<div class="mt-20">
+				<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">Frontend Integration</h1>
+				<p class="mt-6 text-xl leading-8">Simple frontend integration using Pusher open source library.</p>
+				<p class="text-xl leading-8">Put this code at the end of the body:</p>
+				<div class="my-8">
+					<CodeSnippet :code="frontendSnippet" filename="index.html" />
+				</div>
+			</div>
+			<div class="mt-10">
+				<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">Backend Integration</h1>
+				<p class="mt-6 text-xl leading-8">Backend public channel simple example.</p>
+				<p class="text-xl leading-8">You know where to put this better than us:</p>
+				<div class="my-8">
+					<CodeSnippet :code="BackendSnippet" filename="public-event.php" />
+				</div>
+			</div>
+			<Modal ref="modal" />
+		</div>
+	</DefaultTransition>
 </template>
 
 <script setup>

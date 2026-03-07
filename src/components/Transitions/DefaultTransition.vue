@@ -1,6 +1,7 @@
 <template>
   <Transition
-    :name="routeTransition"
+    :name="transitionName"
+    :appear="appear"
     mode="out-in">
     <slot></slot>
   </Transition>
@@ -20,6 +21,17 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
+const props = defineProps({
+  name: {
+    type: String,
+    default: "",
+  },
+  appear: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const route = useRoute();
-const routeTransition = computed(() => route.meta.transition || "");
+const transitionName = computed(() => props.name || route.meta.transition || "");
 </script>
