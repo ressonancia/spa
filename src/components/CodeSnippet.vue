@@ -12,12 +12,14 @@
 </template>
 
 <script setup>
-import { computed, useSlots } from 'vue'
-
 const props = defineProps({
 	code: {
 		type: String,
 		default: '',
+	},
+	copyCode: {
+		type: String,
+		default: null,
 	},
 	filename: {
 		type: String,
@@ -25,9 +27,7 @@ const props = defineProps({
 	},
 })
 
-const slots = useSlots()
-
 const copy = () => {
-	navigator.clipboard.writeText(props.code)
+	navigator.clipboard.writeText(props.copyCode ?? props.code)
 }
 </script>

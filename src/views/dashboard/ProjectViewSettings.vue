@@ -20,17 +20,17 @@
 			<div class="mt-10">
 				<CopyField hide="true" :value="app.app_secret">App Secret</CopyField>
 			</div>
-			<DjangoDoc v-if="selectedLanguage === 'django'" />
-			<DotNetDoc v-else-if="selectedLanguage === 'dotnet'" />
-			<FlaskDoc v-else-if="selectedLanguage === 'flask'" />
-			<GolangDoc v-else-if="selectedLanguage === 'golang'" />
-			<JavaDoc v-else-if="selectedLanguage === 'java'" />
-			<LaravelDoc v-else-if="selectedLanguage === 'laravel'" />
-			<PhpDoc v-else-if="selectedLanguage === 'php'" />
-			<PythonDoc v-else-if="selectedLanguage === 'python'" />
-			<SymfonyDoc v-else-if="selectedLanguage === 'symfony'" />
-			<WordpressDoc v-else-if="selectedLanguage === 'wordpress'" />
-			<NodeDoc v-else />
+			<DjangoDoc v-if="selectedLanguage === 'django'" :app="app" />
+			<DotNetDoc v-else-if="selectedLanguage === 'dotnet'" :app="app" />
+			<FlaskDoc v-else-if="selectedLanguage === 'flask'" :app="app" />
+			<GolangDoc v-else-if="selectedLanguage === 'golang'" :app="app" />
+			<JavaDoc v-else-if="selectedLanguage === 'java'" :app="app" />
+			<LaravelDoc v-else-if="selectedLanguage === 'laravel'" :app="app" />
+			<PhpDoc v-else-if="selectedLanguage === 'php'" :app="app" />
+			<PythonDoc v-else-if="selectedLanguage === 'python'" :app="app" />
+			<SymfonyDoc v-else-if="selectedLanguage === 'symfony'" :app="app" />
+			<WordpressDoc v-else-if="selectedLanguage === 'wordpress'" :app="app" />
+			<NodeDoc v-else :app="app" />
 			<Modal ref="modal" />
 		</div>
 	</DefaultTransition>

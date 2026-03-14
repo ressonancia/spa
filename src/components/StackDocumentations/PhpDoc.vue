@@ -12,7 +12,7 @@
         <p class="mt-6 text-xl leading-8">Backend public channel simple example.</p>
         <p class="text-xl leading-8">You know where to put this better than us:</p>
         <div class="my-8">
-            <CodeSnippet :code="backendSnippet" filename="send-public-event.php" />
+            <CodeSnippet :code="backendSnippet" :copy-code="backendSnippetCopy" filename="send-public-event.php" />
         </div>
     </div>
     <div class="mt-10 mb-20">
@@ -21,9 +21,21 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import CodeSnippet from '@/components/CodeSnippet.vue';
 
-const frontendSnippet = `
+const props = defineProps({
+    app: {
+        type: Object,
+        default: () => ({}),
+    },
+});
+
+const appId = computed(() => props.app?.app_id || 'RESSONANCE_APP_ID');
+const appKey = computed(() => props.app?.app_key || 'RESSONANCE_APP_KEY');
+const appSecret = computed(() => props.app?.app_secret || 'RESSONANCE_APP_SECRET');
+
+const frontendSnippetTemplate = `
 <script src="https://js.pusher.com/8.3.0/pusher.min.js"><\/script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -45,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 <\/script>
 `
-const backendSnippet = `
+const backendSnippetTemplate = `
 <?php
 
 require __DIR__ . '/vendor/autoload.php';
@@ -68,4 +80,14 @@ $pusher->trigger('public-channel', 'new-release', [
 
 echo 'Event sent!';
 `
+
+const replaceCredentials = (snippet, secretValue = '********') =>
+    snippet
+        .replaceAll('RESSONANCE_APP_ID', appId.value)
+        .replaceAll('RESSONANCE_APP_KEY', appKey.value)
+        .replaceAll('RESSONANCE_APP_SECRET', secretValue);
+
+const frontendSnippet = computed(() => replaceCredentials(frontendSnippetTemplate, appSecret.value));
+const backendSnippet = computed(() => replaceCredentials(backendSnippetTemplate));
+const backendSnippetCopy = computed(() => replaceCredentials(backendSnippetTemplate, appSecret.value));
 </script>
