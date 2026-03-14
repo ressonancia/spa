@@ -6,9 +6,8 @@
 			Copy
 			</button>
 		</div>
-		<pre class="bg-gray-900 text-gray-100 px-6 overflow-x-auto">
-			<code class="font-mono text-sm">{{ code }}</code>
-		</pre>
+
+		<highlightjs :code="code" />
 	</div>
 </template>
 
