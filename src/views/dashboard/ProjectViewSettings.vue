@@ -71,7 +71,7 @@ const selectedLanguage = ref('')
 apiRequester.get(`${import.meta.env.VITE_API_URL}/api/apps/${projectName}`).then(function (response) {
 	app.value = response.data
 	globalStore.setHeaderLabel(stringLimit(app.value.app_name.toLowerCase(), 50))
-	selectedLanguage.value = app.value.app_language_choice.toLowerCase()
+	selectedLanguage.value = app.value.app_language_choice?.toLowerCase()
 })
 .catch(function () {
 	modalRef.value.apiDownResponse()
