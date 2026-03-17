@@ -27,6 +27,13 @@
 
 import CodeSnippet from '@/components/CodeSnippet.vue';
 
+defineProps({
+    app: {
+        type: Object,
+        default: () => ({}),
+    },
+});
+
 const frontendSnippet = `
 document.addEventListener("DOMContentLoaded", () => {
     Echo.channel('product.on.sale')

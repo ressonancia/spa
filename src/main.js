@@ -6,6 +6,21 @@ import { createPinia } from "pinia";
 import VueApexCharts from "vue3-apexcharts";
 import { configure, defineRule } from 'vee-validate';
 
+import 'highlight.js/styles/stackoverflow-dark.css'
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import python from 'highlight.js/lib/languages/python';
+import java from 'highlight.js/lib/languages/java';
+import dotnet from 'highlight.js/lib/languages/csharp';
+import html from 'highlight.js/lib/languages/xml';
+import hljsVuePlugin from "@highlightjs/vue-plugin";
+
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('java', java);
+hljs.registerLanguage('dotnet', dotnet);
+hljs.registerLanguage('html', html);
+
 configure({
     generateMessage: (context) => {
       const messages = {
@@ -39,6 +54,7 @@ defineRule('password', (value) => {
 
 const app = createApp(App)
 
+app.use(hljsVuePlugin);
 app.use(createPinia());
 app.use(router);
 app.use(VueApexCharts)
