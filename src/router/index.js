@@ -10,6 +10,7 @@ import LoginView from "@/views/LoginView.vue";
 import CreateAccount from "@/views/CreateAccount.vue";
 import ForgotPassword from "@/views/ForgotPassword.vue";
 import ResetPassword from "@/views/ResetPassword.vue";
+import SocialLogin from "@/views/SocialLogin.vue";
 import EmailVerificationCallOut from "@/views/EmailVerificationCallOut.vue";
 import { useGlobalStore } from "@/stores/global";
 
@@ -101,6 +102,14 @@ const router = createRouter({
       path: "/reset-password",
       name: "reset-password",
       component: ResetPassword,
+      meta: {
+        transition: "slide-fade"
+      }
+    },
+    {
+      path: "/social-login",
+      name: "social-login",
+      component: SocialLogin,
       meta: {
         transition: "slide-fade"
       }
