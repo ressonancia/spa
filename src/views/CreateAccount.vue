@@ -116,6 +116,7 @@ import { useGlobalStore } from "@/stores/global";
 import { Form, Field, defineRule } from 'vee-validate';
 import { required, max, min, confirmed, email as emailRule } from '@vee-validate/rules';
 import Alert from '@/components/Alert.vue';
+import posthog from 'posthog-js';
 
 const name = ref("");
 const email = ref("");
@@ -157,6 +158,8 @@ const login = async () => {
     })
     .then( (response) => {
       globalStore.login(response.data.access_token)
+      posthog.identify(email.value, { name: name.value })
+      posthog.capture('user_signed_up', { name: name.value })
       router.push({
         name: 'email-verification'
       })

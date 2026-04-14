@@ -40,6 +40,7 @@
 import { useRoute } from "vue-router";
 import { ref, useTemplateRef } from 'vue'
 import apiRequester from '@/services/requester';
+import posthog from 'posthog-js';
 import CopyField from '@/components/CopyField.vue';
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
@@ -72,6 +73,7 @@ apiRequester.get(`${import.meta.env.VITE_API_URL}/api/apps/${projectName}`).then
 	app.value = response.data
 	globalStore.setHeaderLabel(stringLimit(app.value.app_name.toLowerCase(), 50))
 	selectedLanguage.value = app.value.app_language_choice?.toLowerCase()
+	posthog.capture('stack_documentation_viewed', { stack: selectedLanguage.value || 'node' })
 })
 .catch(function () {
 	modalRef.value.apiDownResponse()

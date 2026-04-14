@@ -78,6 +78,7 @@ import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
 import { useRouter } from "vue-router";
 import DefaultTransition from "@/components/Transitions/DefaultTransition.vue";
+import posthog from 'posthog-js';
 
 const password = ref("");
 const passwordConfirmation = ref("");
@@ -113,6 +114,7 @@ const changePassword = async () => {
       password_confirmation: passwordConfirmation.value,
     })
     .then( () => {
+      posthog.capture('password_changed')
       password.value = ''
       passwordConfirmation.value = ''
       modalRef.value.showModal(
@@ -140,6 +142,8 @@ const changePassword = async () => {
   const deleteAccount = async () => {
     apiRequester.delete('/api/delete-account')
     .then( () => {
+      posthog.capture('account_deleted')
+      posthog.reset()
       globalStore.logout()
       router.push({
         name: "login"
