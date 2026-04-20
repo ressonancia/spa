@@ -48,6 +48,7 @@ import logoUrl from '@/assets/img/logo.png'
 import Modal from "@/views/modals/Modal.vue";
 import { Form, Field, defineRule } from 'vee-validate';
 import { required, max, email as emailRule } from '@vee-validate/rules';
+import posthog from 'posthog-js';
 
 const email = ref("");
 const modalRef = useTemplateRef('modal')
@@ -65,6 +66,7 @@ const send = async () => {
       email: email.value
     })
     .then( (response) => {
+      posthog.capture('forgot_password_requested')
       modalRef.value.showModal(
         'Reset Password Email Sent',
         'success',

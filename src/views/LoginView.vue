@@ -109,6 +109,7 @@ import { useGlobalStore } from "@/stores/global";
 import Modal from "@/views/modals/Modal.vue";
 import { required, email as emailRule } from '@vee-validate/rules';
 import { Form, Field, defineRule } from 'vee-validate';
+import posthog from 'posthog-js';
 
 const email = ref("");
 const password = ref("");
@@ -138,6 +139,8 @@ const login = async () => {
     })
     .then( response => {
       globalStore.login(response.data.access_token)
+      posthog.identify(email.value)
+      posthog.capture('user_logged_in', { method: 'email' })
 
       router.push({
         name: "projects",

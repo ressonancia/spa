@@ -133,6 +133,7 @@ import { ref, useTemplateRef } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 import logoUrl from '@/assets/img/logo.png'
 import Modal from "@/views/modals/RessonanceCloudModal.vue";
+import posthog from 'posthog-js';
 
 const router = useRouter()
 const route = useRoute()
@@ -159,6 +160,7 @@ const getRoutePathByName = (routeName) => {
 
 const logout = () => {
     globalStore.logout()
+    posthog.reset()
     router.push({
         name: 'login'
     })

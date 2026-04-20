@@ -24,8 +24,9 @@
 
 <script setup>
 import { EyeIcon, EyeSlashIcon, ClipboardDocumentIcon} from '@heroicons/vue/20/solid'
-import { ref } from 'vue'
+import { ref, useSlots } from 'vue'
 import CopyTooltip from '@/components/CopyTooltip.vue'
+import posthog from 'posthog-js';
 
 const props = defineProps({
   value: String,
@@ -36,10 +37,12 @@ let redacted = ref(true);
 let inputType = ref(props.hide ? 'password' : 'text');
 let showText = ref('Show');
 const copyTooltipRef = ref(null)
+const slots = useSlots()
 
 const copy = () => {
 	navigator.clipboard.writeText(props.value).catch(() => null)
 	copyTooltipRef.value?.show()
+	posthog.capture('api_key_copied', { field_label: slots.default?.()[0]?.children ?? '' })
 }
 
 const toggle = () => {

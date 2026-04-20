@@ -5,6 +5,7 @@ import router from "./router";
 import { createPinia } from "pinia";
 import VueApexCharts from "vue3-apexcharts";
 import { configure, defineRule } from 'vee-validate';
+import posthog from 'posthog-js';
 
 import 'highlight.js/styles/stackoverflow-dark.css'
 import hljs from 'highlight.js/lib/core';
@@ -50,9 +51,20 @@ defineRule('password', (value) => {
 	return true;
 });
 
-
+if (import.meta.env.VITE_POSTHOG_PROJECT_TOKEN) {
+  posthog.init(import.meta.env.VITE_POSTHOG_PROJECT_TOKEN || '', {
+    api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+    defaults: '2026-01-30',
+  });
+}
 
 const app = createApp(App)
+
+if (import.meta.env.VITE_POSTHOG_PROJECT_TOKEN) {
+  app.config.errorHandler = (err) => {
+    posthog.captureException(err)
+  }
+}
 
 app.use(hljsVuePlugin);
 app.use(createPinia());

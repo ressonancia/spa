@@ -17,6 +17,7 @@
     "axios": "^1.7.7",
     "luxon": "^3.5.0",
     "pinia": "^2.2.6",
+    "posthog-js": "^1.368.0",
     "vee-validate": "^4.14.7",
     "vue": "^3.4.29",
     "vue-router": "^4.4.0",

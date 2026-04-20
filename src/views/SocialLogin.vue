@@ -12,6 +12,7 @@ import loadingGifUrl from "@/assets/img/loading.gif";
 import { useRoute, useRouter } from "vue-router";
 import apiRequester from '@/services/requester';
 import { useGlobalStore } from "@/stores/global";
+import posthog from 'posthog-js';
 
 const route = useRoute();
 const authorizationCode = route.query.authorizationCode
@@ -28,6 +29,7 @@ const loginWithAuthorizationCode = async () => {
     })
     .then( (response) => {
       globalStore.login(response.data.access_token)
+      posthog.capture('social_login_completed')
 
       router.push({
         name: "projects",

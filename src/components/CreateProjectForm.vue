@@ -77,6 +77,7 @@ import { ChevronUpDownIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import apiRequester from '@/services/requester';
 import { computed, ref, useTemplateRef } from 'vue'
 import { useRouter } from "vue-router";
+import posthog from 'posthog-js';
 import djangoLogoUrl from '@/assets/img/django.png'
 import dotNetLogoUrl from '@/assets/img/dot-net.png'
 import flaskLogoUrl from '@/assets/img/flask.png'
@@ -133,6 +134,10 @@ const createProject = async () => {
 			app_name: appName.value,
 			app_language_choice: chosenLanguage.value ?? ''
 		});
+
+		posthog.capture('project_created', {
+			stack: chosenLanguage.value || 'none',
+		})
 
 		appName.value = ''
 		chosenLanguage.value = ''

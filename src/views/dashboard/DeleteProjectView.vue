@@ -31,6 +31,7 @@ import apiRequester from '@/services/requester';
 import { ref, useTemplateRef } from 'vue'
 import { useRouter, useRoute } from "vue-router";
 import DefaultTransition from "@/components/Transitions/DefaultTransition.vue";
+import posthog from 'posthog-js';
 
 
 let router = useRouter()
@@ -56,6 +57,10 @@ const deleteProject = async () => {
 		let response;
 
 		response = await apiRequester.delete(`/api/apps/${route.params.project}`);
+
+		posthog.capture('project_deleted', {
+			project_name: route.query.projectName,
+		})
 
 		appName.value = ''
 		router.push({
