@@ -29,6 +29,7 @@ const loginWithAuthorizationCode = async () => {
     })
     .then( (response) => {
       globalStore.login(response.data.access_token)
+      posthog.identify(response.data.user.email)
       posthog.capture('social_login_completed')
 
       router.push({
