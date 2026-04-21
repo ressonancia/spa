@@ -148,6 +148,8 @@ import Alert from '@/components/Alert.vue';
 import posthog from 'posthog-js';
 
 const isSelfHosted = import.meta.env.VITE_RESSONANCE_SELF_HOSTED === 'true'
+const googleRedirect = import.meta.env.VITE_API_URL + '/api/auth/google/redirect';
+const githubRedirect = import.meta.env.VITE_API_URL + '/api/auth/github/redirect';
 
 const name = ref("");
 const email = ref("");
