@@ -13,6 +13,8 @@ import ResetPassword from "@/views/ResetPassword.vue";
 import SocialLogin from "@/views/SocialLogin.vue";
 import EmailVerificationCallOut from "@/views/EmailVerificationCallOut.vue";
 import { useGlobalStore } from "@/stores/global";
+import MembersView from "@/views/dashboard/MembersView.vue";
+import InviteMemberView from "@/views/dashboard/InviteMemberView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +39,7 @@ const router = createRouter({
           component: CreateProjectView,
         },
         {
-          path: ":project",
+          path: ":project/stats",
           name: "project",
           component: ProjectViewStats,
         },
@@ -55,7 +57,18 @@ const router = createRouter({
           path: "settings",
           name: "settings",
           component: Settings,
-        }
+        },
+        {
+          path: "organization/members",
+          name: "oganization-members",
+          component: MembersView,
+        },
+
+        {
+          path: "organization/invite-member",
+          name: "oganization-invite-member",
+          component: InviteMemberView,
+        },
       ]
     },
     {

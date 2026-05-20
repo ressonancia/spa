@@ -47,6 +47,30 @@
         <Modal ref="modal" />
       </div>
       <div>
+        <Form>
+          <div class="max-w-2xl mt-20">
+            <p for="name" class="block text-sm font-medium leading-6 text-gray-900 text-left">Organization Name</p>
+            <div class="mt-2">
+              <Field
+                  v-model="password"
+                  id="organization-name"
+                  name="organization-name"
+                  type="organization-name"
+                  autocomplete="Organization Name"
+                  class="ring-gray-300 block w-full rounded-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 sm:text-sm sm:leading-6" />
+            </div>
+          </div>
+
+          <div class="mt-10">
+            <button @click="createProject" type="submit"
+              class="inline-flex items-center gap-x-2 rounded-md bg-gray-800  px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">
+              Change Organization Name
+            </button>
+          </div>
+        </Form>
+        <Modal ref="modal" />
+      </div>
+      <div>
         <Form @submit="">
           <div class="max-w-2xl mt-20">
             <div class="mt-2">

@@ -40,11 +40,40 @@
                                     leave-to-class="transform opacity-0 scale-95">
                                     <MenuItems
                                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <MenuItem>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-sm text-gray-700 cursor-default truncate">
-												<span class="font-bold">Signed in as:</span><br>{{ user.email }}
-											</a>
+                                        <MenuItem as="div" class="relative group/submenu">
+                                            <a href="#" 
+                                                class="flex items-start justify-between gap-2 px-4 py-2 text-sm text-gray-700 cursor-pointer">
+                                                <span class="truncate">
+                                                    <span class="font-bold">Organization:</span>
+                                                    <br>L30 Corporation
+                                                </span>
+                                                <ChevronDoubleRightIcon class="mt-1 h-4 w-4 shrink-0 text-gray-500"
+                                                    aria-hidden="true" />
+                                            </a>
+                                            <div
+                                                class="absolute left-full top-0 z-20 hidden w-56 rounded-md bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover/submenu:block">
+                                                <div class="px-4 pb-2 text-sm font-semibold text-gray-900">Choose
+                                                    Organization.</div>
+                                                <a href="#"
+                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Northbridge
+                                                    Labs</a>
+                                                <a href="#"
+                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Suncrest
+                                                    Dynamics</a>
+                                                <a href="#"
+                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Harborline
+                                                    Systems</a>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuItem v-slot="{ active }">
+                                            <RouterLink
+                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                                                to="/dashboard/settings">Add Organization</RouterLink>
+                                        </MenuItem>
+                                        <MenuItem v-slot="{ active }">
+                                            <RouterLink
+                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                                                to="/dashboard/organization/members">Organization Members</RouterLink>
                                         </MenuItem>
 										<hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
                                         <MenuItem v-if="!isSelfHosted" v-slot="{ active }">
@@ -55,6 +84,13 @@
                                         <MenuItem @click="logout" v-slot="{ active }">
                                             <a href="#"
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
+                                        </MenuItem>
+                                        <hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
+                                        <MenuItem>
+                                            <a href="#"
+                                                class="block px-4 py-2 text-sm text-gray-700 cursor-default truncate">
+												<span class="font-bold">Signed in as:</span><br>{{ user.email }}
+											</a>
                                         </MenuItem>
                                     </MenuItems>
                                 </transition>
@@ -127,7 +163,7 @@
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, ChevronDoubleRightIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useGlobalStore } from "@/stores/global";
 import { ref, useTemplateRef } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
