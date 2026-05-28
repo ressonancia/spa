@@ -7,8 +7,6 @@ export const useGlobalStore = defineStore("global", {
     
     let token = localStorage.getItem('token')
     let validToken = token ? true : false
-    let __user = null
-
     return {
       headerLabel: 'Projects',
       isLoggedIn: validToken,
@@ -41,7 +39,13 @@ export const useGlobalStore = defineStore("global", {
 
       let response = await apiRequester.get('/api/user')
       this.__user = response.data
+      this.__currentOrganization = response.data.organizations.find(
+        (organization) => organization?.pivot?.role === 'owner'
+      )
       return this.__user
+    },
+    async getCurrentOrganization() {
+      return this.__currentOrganization
     }
   },
 });

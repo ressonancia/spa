@@ -77,6 +77,7 @@ import { ChevronUpDownIcon, PlusIcon } from '@heroicons/vue/20/solid'
 import apiRequester from '@/services/requester';
 import { computed, ref, useTemplateRef } from 'vue'
 import { useRouter } from "vue-router";
+import { useGlobalStore } from "@/stores/global";
 import posthog from 'posthog-js';
 import djangoLogoUrl from '@/assets/img/django.png'
 import dotNetLogoUrl from '@/assets/img/dot-net.png'
@@ -92,6 +93,7 @@ import wordpressLogoUrl from '@/assets/img/wordpress.png'
 
 let router = useRouter()
 const modalRef = useTemplateRef('modal')
+const globalStore = useGlobalStore()
 
 const chosenLanguage = ref('')
 const stackOptions = [
@@ -130,7 +132,9 @@ const createProject = async () => {
 
 		let response;
 
-		response = await apiRequester.post(`/api/apps`, {
+		const organization = await globalStore.getCurrentOrganization()
+
+		response = await apiRequester.post(`/api/organizations/${organization.id}/apps`, {
 			app_name: appName.value,
 			app_language_choice: chosenLanguage.value ?? ''
 		});
