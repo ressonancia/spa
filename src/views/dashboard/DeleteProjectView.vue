@@ -56,7 +56,7 @@ const deleteProject = async () => {
 
 		let response;
 
-		const organization = await globalStore.getCurrentOrganization()
+		const organization = (await globalStore.getUser()).getCurrentOrganization()
 
 		response = await apiRequester.delete(`/api/organizations/${organization.id}/apps/${route.params.project}`);
 

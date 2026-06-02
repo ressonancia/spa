@@ -28,6 +28,9 @@ export const useGlobalStore = defineStore("global", {
     	this.isLoggedIn = false;
       this.token = null
     },
+    setCurrentOrganizationId(organizationId) {
+      this.__currentOrganizationId = organizationId
+    },
     async getUser() {
       if (!this.isLoggedIn) {
         return null
@@ -39,13 +42,18 @@ export const useGlobalStore = defineStore("global", {
 
       let response = await apiRequester.get('/api/user')
       this.__user = response.data
-      this.__currentOrganization = response.data.organizations.find(
-        (organization) => organization?.pivot?.role === 'owner'
-      )
+
+      this.__user.getCurrentOrganization = function () {
+        if(this.__currentOrganizationId) {
+          return this.organizations.find(
+            organization => organization.id === this.__currentOrganizationId
+          )
+        }
+
+        return this.organizations[0]
+      }
+
       return this.__user
-    },
-    async getCurrentOrganization() {
-      return this.__currentOrganization
     }
   },
 });

@@ -109,7 +109,7 @@ const resolveStack = (stackValue) => {
 }
 
 const loadProjects = async () => {
-  const organization = await globalStore.getCurrentOrganization()
+  const organization = (await globalStore.getUser()).getCurrentOrganization()
   const response = await apiRequester.get(`/api/organizations/${organization.id}/apps`)
   response.data.data.forEach(app => {
     const stack = resolveStack(app.app_language_choice)

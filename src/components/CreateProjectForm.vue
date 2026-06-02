@@ -132,7 +132,7 @@ const createProject = async () => {
 
 		let response;
 
-		const organization = await globalStore.getCurrentOrganization()
+		const organization = (await globalStore.getUser()).getCurrentOrganization()
 
 		response = await apiRequester.post(`/api/organizations/${organization.id}/apps`, {
 			app_name: appName.value,

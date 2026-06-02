@@ -68,8 +68,8 @@ const route = useRoute();
 const projectName = route.params.project;
 
 const selectedLanguage = ref('')
-globalStore.getCurrentOrganization().then(organization => {
-	apiRequester.get(`${import.meta.env.VITE_API_URL}/api/organizations/${organization.id}/apps/${projectName}`).then(function (response) {
+globalStore.getUser().then(user => {
+	apiRequester.get(`${import.meta.env.VITE_API_URL}/api/organizations/${user.getCurrentOrganization().id}/apps/${projectName}`).then(function (response) {
 		app.value = response.data
 		globalStore.setHeaderLabel(stringLimit(app.value.app_name.toLowerCase(), 50))
 		selectedLanguage.value = app.value.app_language_choice?.toLowerCase()
