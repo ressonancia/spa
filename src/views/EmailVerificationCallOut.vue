@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+import axios from 'axios'
 import apiRequester from '@/services/requester'
 import { ref, useTemplateRef } from "vue";
 import { useRoute } from 'vue-router'
@@ -34,7 +35,19 @@ const globalStore = useGlobalStore()
 isLoggedIn.value = globalStore.isLoggedIn
 
 if (routeParam) {
-    apiRequester.post(atob(routeParam.replace(/-/g, "+").replace(/_/g, "/"))).then(() => {
+    const headers = {
+        Accept: 'application/json',
+    }
+
+    if (globalStore.token) {
+        headers.Authorization = `Bearer ${globalStore.token}`
+    }
+
+    axios.post(
+        atob(routeParam.replace(/-/g, "+").replace(/_/g, "/")),
+        null,
+        { headers }
+    ).then(() => {
         modalRef.value.showModal(
             'Account Activated',
             'success',
@@ -73,7 +86,7 @@ if (routeParam) {
     })
 }
 
-if (isLoggedIn) {
+if (isLoggedIn.value) {
     globalStore.getUser().then(user => {
         email.value = user.email
     })
