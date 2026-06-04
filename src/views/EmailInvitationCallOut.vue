@@ -11,7 +11,7 @@
 
 <script setup>
 import apiRequester from '@/services/requester'
-import { ref, useTemplateRef } from "vue";
+import { useTemplateRef } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
@@ -30,14 +30,13 @@ if (routeParam) {
             response.data.data.invited_organization_id
         )
 
-        console.log(response.data.access_token)
-
         router.push({
             name: 'projects'
         })
     }).catch( error => {
         switch (error.response.status) {
             case 412:
+            case 404:
                 modalRef.value.showModal(
                     'Invitation Expired',
                     'danger',
@@ -48,20 +47,9 @@ if (routeParam) {
                 )
             break;
 
-            case 404:
-                modalRef.value.showModal(
-                    'Invalid Link',
-                    'danger',
-                    'Log in to activate your account.',
-                    true,
-                    'Get Out',
-                    'login'
-                )
-            break;
-
             case 429:
                 modalRef.value.showModal(
-                    'Invalid Link',
+                    'Too many tries',
                     'danger',
                     'Too many tries. Try again later.',
                     true,

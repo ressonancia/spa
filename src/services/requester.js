@@ -26,8 +26,13 @@ apiRequester.interceptors.response.use(
   },
   (error) => {
     const globalStore = useGlobalStore();
+    const status = error.response?.status
 
-    if (error.response && error.response.status === 401) {
+    if (status === 403 || status === 404) {
+      globalStore.cleanCurrentOrganization();
+    }
+
+    if (status === 401) {
       // Clear the token and user data
       globalStore.logout();
 

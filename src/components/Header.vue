@@ -45,24 +45,17 @@
                                                 class="flex items-start justify-between gap-2 px-4 py-2 text-sm text-gray-700 cursor-pointer">
                                                 <span class="truncate">
                                                     <span class="font-bold">Organization:</span>
-                                                    <br>L30 Corporation
+                                                    <br>{{ user.getCurrentOrganization().name }}
                                                 </span>
-                                                <ChevronDoubleRightIcon class="mt-1 h-4 w-4 shrink-0 text-gray-500"
+                                                <ChevronDoubleRightIcon v-if="otherUserOrganizations.length" class="mt-1 h-4 w-4 shrink-0 text-gray-500"
                                                     aria-hidden="true" />
                                             </a>
                                             <div
-                                                class="absolute left-full top-0 z-20 hidden w-56 rounded-md bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover/submenu:block">
+                                                class="absolute left-full top-0 z-20 hidden w-56 rounded-md bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover/submenu:block"
+                                                v-if="otherUserOrganizations.length">
                                                 <div class="px-4 pb-2 text-sm font-semibold text-gray-900">Choose
                                                     Organization.</div>
-                                                <a href="#"
-                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Northbridge
-                                                    Labs</a>
-                                                <a href="#"
-                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Suncrest
-                                                    Dynamics</a>
-                                                <a href="#"
-                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Harborline
-                                                    Systems</a>
+                                                <a @click="changeOrganization(organization.id)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" v-for="organization in otherUserOrganizations" :key="organization.id" href="#">{{ organization.name }}</a>
                                             </div>
                                         </MenuItem>
                                         <MenuItem v-slot="{ active }">
@@ -177,10 +170,14 @@ const globalStore = useGlobalStore()
 const headerLabel = ref('')
 const isSelfHosted = ref(true)
 const user = ref([])
+const otherUserOrganizations = ref([])
 const ressonanceCloudModalRef = useTemplateRef('ressonanceCloud')
 
 globalStore.getUser().then((userData) => {
     user.value = userData
+    otherUserOrganizations.value = userData.organizations.filter(
+        org => org.id !== userData.getCurrentOrganization().id
+    )
 })
 
 headerLabel.value = globalStore.headerLabel
@@ -204,6 +201,11 @@ const logout = () => {
 
 const showRessonanceCloud = () => {
   ressonanceCloudModalRef.value.showModal()
+}
+
+const changeOrganization = async (organizationId) => {
+    globalStore.setCurrentOrganizationId(organizationId)
+    location.reload()
 }
 
 const navigation = [

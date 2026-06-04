@@ -27,9 +27,13 @@ export const useGlobalStore = defineStore("global", {
       localStorage.removeItem('token')
     	this.isLoggedIn = false;
       this.token = null
+      this.__user = null
     },
     setCurrentOrganizationId(organizationId) {
-      this.__currentOrganizationId = organizationId
+      localStorage.setItem('currentOrganizationId', organizationId)
+    },
+    cleanCurrentOrganization() {
+      localStorage.removeItem('currentOrganizationId')
     },
     async getUser() {
       if (!this.isLoggedIn) {
@@ -44,10 +48,12 @@ export const useGlobalStore = defineStore("global", {
       this.__user = response.data
 
       this.__user.getCurrentOrganization = function () {
-        if(this.__currentOrganizationId) {
-          return this.organizations.find(
-            organization => organization.id === this.__currentOrganizationId
-          )
+        const currentOrganization = this.organizations.find(
+          organization => organization.id === localStorage.getItem('currentOrganizationId')
+        )
+        
+        if(currentOrganization) {
+          return currentOrganization
         }
 
         return this.organizations[0]
