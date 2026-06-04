@@ -63,7 +63,7 @@
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 to="/dashboard/settings">Add Organization</RouterLink>
                                         </MenuItem>
-                                        <MenuItem v-slot="{ active }">
+                                        <MenuItem v-if="!user.isMember()" v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 to="/dashboard/organization/members">Organization Members</RouterLink>

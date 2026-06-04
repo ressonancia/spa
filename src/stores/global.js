@@ -59,6 +59,13 @@ export const useGlobalStore = defineStore("global", {
         return this.organizations[0]
       }
 
+      this.__user.isMember = function (organizationId) {
+        organizationId = organizationId ?? localStorage.getItem('currentOrganizationId')
+
+        const organization = this.organizations.find(org => org.id === organizationId)
+        return organization?.pivot?.role === 'member'
+      }
+
       return this.__user
     }
   },
