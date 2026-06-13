@@ -38,12 +38,13 @@
                     {{ member.pivot.role === 'admin' ? 'Make a member' : 'Make an admin' }}
                   </button>
                   <button
+                    @click="removeMemberFromOrganization(member.pivot.id, member.id)"
                     type="button"
-                    :disabled="member.pivot.role === 'owner'"
+                    :disabled="!canUserBeRemoved(member)"
                     :class="[
-                      member.pivot.role === 'owner'
-                        ? 'cursor-not-allowed text-gray-400'
-                        : 'text-red-600 hover:text-red-800 hover:underline',
+                      canUserBeRemoved(member)
+                        ? 'text-red-600 hover:text-red-800 hover:underline'
+                        : 'cursor-not-allowed text-gray-400',
                       'inline-flex items-center text-sm font-medium transition-colors'
                     ]"
                   >
@@ -83,6 +84,11 @@ globalStore.setHeaderLabel('Organization Members')
 const members = ref([])
 const user = ref({})
 
+const canUserBeRemoved = (member) => {
+  return member.pivot.role !== 'owner'
+    && user.value?.id !== member.id
+}
+
 const getBadgeClass = (access) => {
   return {
     owner: 'bg-gray-100 text-gray-500 ring-gray-300 opacity-75 cursor-not-allowed',
@@ -113,6 +119,24 @@ const changeMemberPermission = (permissionId, role) => {
         members.value.find((m) => m.pivot.id === permissionId).pivot.role = response.data.role
         modalRef.value.closeModal()
       }).catch( error => {
+        modalRef.value.apiDownResponse()
+      })
+    }
+  )
+}
+
+const removeMemberFromOrganization = (organizationUserId, memberId) => {
+  modalRef.value.showModal(
+    "Remove Member From Organization?",
+    "danger",
+    "Removing this member will revoke their access to the organization.",
+    true,
+    "Remove member",
+    () => {
+      apiRequester.delete(`api/organization-users/${organizationUserId}`).then(() => {
+        members.value = members.value.filter((member) => String(member.id) !== String(memberId))
+        modalRef.value.closeModal()
+      }).catch(() => {
         modalRef.value.apiDownResponse()
       })
     }
