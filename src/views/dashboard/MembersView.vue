@@ -25,6 +25,7 @@
               <td v-if="!user.isMember()" class="whitespace-nowrap px-6 py-4">
                 <div class="flex flex-wrap gap-2">
                   <button
+                    @click="changeMemberPermission(member.pivot.id, member.pivot.role)"
                     type="button"
                     :disabled="member.pivot.role === 'owner'"
                     :class="[
@@ -34,7 +35,7 @@
                       'inline-flex items-center text-sm font-medium transition-colors'
                     ]"
                   >
-                    {{ member.pivot.role === 'admin' ? 'Make member' : 'Make admin' }}
+                    {{ member.pivot.role === 'admin' ? 'Make a member' : 'Make an admin' }}
                   </button>
                   <button
                     type="button"
@@ -63,15 +64,19 @@
       </div>
     </div>
   </DefaultTransition>
+
+  <Modal ref="modal" />
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/solid'
 import apiRequester from '@/services/requester'
 import { useGlobalStore } from "@/stores/global";
 import DefaultTransition from "@/components/Transitions/DefaultTransition.vue";
+import Modal from "@/views/modals/Modal.vue";
 
+const modalRef = useTemplateRef('modal');
 const globalStore = useGlobalStore()
 globalStore.setHeaderLabel('Organization Members')
 
@@ -93,5 +98,25 @@ globalStore.getUser().then(userData => {
     members.value = response.data.users
   })
 })
+
+const changeMemberPermission = (permissionId, role) => {
+  modalRef.value.showModal(
+    "Change Member Permission?",
+    "warning",
+    "Changing the member permission can affect the member's access.",
+    true,
+    role === 'admin' ? 'Make user a normal member' : 'Make user an admin',
+    () => {
+      apiRequester.patch(`api/organization-users/${permissionId}/role`, {
+        role: role === 'admin' ? 'member' : 'admin'
+      }).then((response) => {
+        members.value.find((m) => m.pivot.id === permissionId).pivot.role = response.data.role
+        modalRef.value.closeModal()
+      }).catch( error => {
+        modalRef.value.apiDownResponse()
+      })
+    }
+  )
+}
 
 </script>
