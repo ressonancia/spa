@@ -118,8 +118,20 @@ const changeMemberPermission = (permissionId, role) => {
       }).then((response) => {
         members.value.find((m) => m.pivot.id === permissionId).pivot.role = response.data.role
         modalRef.value.closeModal()
-      }).catch( error => {
-        modalRef.value.apiDownResponse()
+      }).catch((error) => {
+        switch (error.response.status) {
+          case 403:
+          modalRef.value.showModal(
+            'Action not allowed',
+            'warning',
+            'Only admins can change member permissions.',
+          )
+          break;
+        
+          default:
+            modalRef.value.apiDownResponse()
+            break;
+        }
       })
     }
   )
