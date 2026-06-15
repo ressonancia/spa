@@ -47,23 +47,36 @@
         <Modal ref="modal" />
       </div>
       <div>
-        <Form>
+        <Form @submit="changeOrganizationName" :validation-schema="organizationNameSchema" v-slot="{ errors }">
           <div class="max-w-2xl mt-20">
             <p for="name" class="block text-sm font-medium leading-6 text-gray-900 text-left">Organization Name</p>
             <div class="mt-2">
               <Field
-                  v-model="password"
+                  v-model="organizationName"
                   id="organization-name"
-                  name="organization-name"
-                  type="organization-name"
+                  name="name"
+                  type="text"
+                  :disabled="!canManageOrganization"
                   autocomplete="Organization Name"
-                  class="ring-gray-300 block w-full rounded-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 sm:text-sm sm:leading-6" />
+                  class="block w-full rounded-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 sm:text-sm sm:leading-6" 
+                  :validation-schema="organizationNameSchema"
+                  :class="[
+                    errors.name ? 'ring-orange-300' : 'ring-gray-300',
+                    !canManageOrganization ? 'cursor-not-allowed bg-gray-100 text-gray-500' : ''
+                  ]"
+                  v-slot="{ errors }"
+                />
+                <p class="mt-2 text-sm text-orange-300" id="organization-name-error">{{ errors.name }}</p>
             </div>
           </div>
 
           <div class="mt-10">
             <button @click="createProject" type="submit"
-              class="inline-flex items-center gap-x-2 rounded-md bg-gray-800  px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">
+              :disabled="!canManageOrganization"
+              :class="[
+                canManageOrganization ? 'bg-gray-800 hover:bg-gray-700' : 'cursor-not-allowed bg-gray-300',
+                'inline-flex items-center gap-x-2 rounded-md px-10 py-5 text-sm font-semibold text-white shadow-sm'
+              ]">
               Change Organization Name
             </button>
           </div>
@@ -94,9 +107,9 @@
 
 
 <script setup>
-import { ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import { Form, Field, defineRule } from 'vee-validate';
-import { required, min, confirmed } from '@vee-validate/rules';
+import { required, min, max, confirmed } from '@vee-validate/rules';
 import apiRequester from '@/services/requester';
 import Modal from "@/views/modals/Modal.vue";
 import { useGlobalStore } from "@/stores/global";
@@ -109,16 +122,31 @@ const passwordConfirmation = ref("");
 const modalRef = useTemplateRef('modal')
 const globalStore = useGlobalStore()
 const router = useRouter()
+const user = ref({})
+const organizationName = ref("");
+const canManageOrganization = ref(false);
 
 defineRule('required', required);
 defineRule('min', min);
 defineRule('confirmed', confirmed);
+defineRule('required', required);
+defineRule('max', max);
 
 globalStore.setHeaderLabel('Settings')
+
+globalStore.getUser().then((userData) => {
+  user.value = userData;
+  organizationName.value = userData.getCurrentOrganization().name ?? "";
+  canManageOrganization.value = !userData.isMember();
+});
 
 const schema = {
   password: 'required|min:8|password',
   passwordConfirmation: 'required|confirmed:@password'
+};
+
+const organizationNameSchema = {
+  name: 'required|max:200|min:3',
 };
 
 const showw = () => {
@@ -130,6 +158,25 @@ const showw = () => {
     'Delete Account For Good',
     deleteAccount
   )
+}
+
+const changeOrganizationName = () => {
+  if (!canManageOrganization.value) {
+    return
+  }
+
+  apiRequester.patch(`api/organizations/${user.value.getCurrentOrganization().id}`, {
+      name: organizationName.value,
+    }).then( () => {
+      posthog.capture('organization_name_changed')
+      modalRef.value.showModal(
+        'Success',
+        'success',
+        'Organization name changed.',
+      )
+    }).catch(() => {
+      modalRef.value.apiDownResponse()
+    });
 }
 
 const changePassword = async () => {
