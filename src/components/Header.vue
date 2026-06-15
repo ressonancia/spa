@@ -61,7 +61,7 @@
                                         <MenuItem v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
-                                                to="/dashboard/settings">Add Organization</RouterLink>
+                                                to="/dashboard/organization/create">Add Organization</RouterLink>
                                         </MenuItem>
                                         <MenuItem v-if="!user.isMember()" v-slot="{ active }">
                                             <RouterLink
@@ -184,7 +184,9 @@ headerLabel.value = globalStore.headerLabel
 isSelfHosted.value = globalStore.isSelfHosted
 
 globalStore.$onAction((action) => {
-    headerLabel.value = action.args[0] ?? 'Project'
+    if (action.name === 'setHeaderLabel') {
+        headerLabel.value = action.args[0] ?? 'Project'
+    }
 })
 
 const getRoutePathByName = (routeName) => {

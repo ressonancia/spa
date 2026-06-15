@@ -16,6 +16,7 @@ import { useGlobalStore } from "@/stores/global";
 import MembersView from "@/views/dashboard/MembersView.vue";
 import InviteMemberView from "@/views/dashboard/InviteMemberView.vue";
 import EmailInvitationCallOut from "@/views/EmailInvitationCallOut.vue";
+import CreateOrganizarionFormView from "@/views/dashboard/CreateOrganizarionFormView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +70,11 @@ const router = createRouter({
           path: "organization/invite-member",
           name: "oganization-invite-member",
           component: InviteMemberView,
+        },
+        {
+          path: "organization/create",
+          name: "oganization-create",
+          component: CreateOrganizarionFormView,
         },
       ]
     },
