@@ -84,11 +84,20 @@
         <div class="mt-20">
           <button
             type="submit"
-            class="inline-flex items-center gap-x-2 rounded-md bg-gray-800 px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700"
+            :disabled="!canInviteMembers"
+            :class="[
+              canInviteMembers
+                ? 'bg-gray-800 hover:bg-gray-700'
+                : 'cursor-not-allowed bg-gray-300',
+              'inline-flex items-center gap-x-2 rounded-md px-10 py-5 text-sm font-semibold text-white shadow-sm transition-colors'
+            ]"
           >
             Send Invitation
             <PaperAirplaneIcon class="-ml-0.5 h-5 w-5" aria-hidden="true" />
           </button>
+          <p v-if="hasResolvedUser && !canInviteMembers" class="mt-4 text-sm text-gray-500">
+            Only organization admins and owners can send invitations.
+          </p>
         </div>
       </Form>
 
@@ -108,6 +117,7 @@ import posthog from 'posthog-js'
 import { useGlobalStore } from '@/stores/global'
 import DefaultTransition from '@/components/Transitions/DefaultTransition.vue'
 import Modal from '@/views/modals/Modal.vue'
+import apiRequester from '@/services/requester'
 
 const globalStore = useGlobalStore()
 globalStore.setHeaderLabel('Invite Member')
@@ -117,6 +127,8 @@ const modalRef = useTemplateRef('modal')
 const name = ref('')
 const email = ref('')
 const role = ref('member')
+const user = ref(null)
+const hasResolvedUser = ref(false)
 
 const roleOptions = [
   { value: 'admin', label: 'Admin', icon: ShieldCheckIcon },
@@ -126,6 +138,25 @@ const roleOptions = [
 const selectedRole = computed(() => {
   return roleOptions.find((option) => option.value === role.value) ?? roleOptions[1]
 })
+
+const canInviteMembers = computed(() => {
+  const currentRole = user.value?.getCurrentOrganization?.()?.pivot?.role
+
+  return currentRole === 'admin' || currentRole === 'owner'
+})
+
+const resetInvitationForm = (resetForm) => {
+  const initialValues = {
+    name: '',
+    email: '',
+    role: 'member',
+  }
+
+  name.value = initialValues.name
+  email.value = initialValues.email
+  role.value = initialValues.role
+  resetForm({ values: initialValues })
+}
 
 defineRule('required', required)
 defineRule('max', max)
@@ -137,16 +168,53 @@ const schema = {
   role: 'required',
 }
 
-const inviteMember = () => {
-  posthog.capture('member_invited', { role: role.value })
-  modalRef.value.showModal(
-    'Invitation Sent',
-    'success',
-    `An invitation was sent to ${email.value}.`
-  )
+globalStore.getUser().then((userData) => {
+  user.value = userData
+  hasResolvedUser.value = true
+})
 
-  name.value = ''
-  email.value = ''
-  role.value = 'member'
+const inviteMember = (_values, { resetForm }) => {
+  if (!canInviteMembers.value || !user.value) {
+    return
+  }
+
+  const organizationId = user.value.getCurrentOrganization().id
+
+  modalRef.value.showModal(
+    'Send Invitation?',
+    'warning',
+    `An invitation email will be sent to ${email.value} to be part of the organization.`,
+    true,
+    'Send invitation',
+    () => {
+      apiRequester.post(`/api/organizations/${organizationId}/invitations`, {
+        email: email.value,
+        name: name.value,
+        role: role.value,
+      }).then(() => {
+        posthog.capture('member_invited', { role: role.value })
+        resetInvitationForm(resetForm)
+        modalRef.value.showModal(
+          'Invitation Sent',
+          'success',
+          'An invitation email was sent'
+        )
+      }).catch((error) => {
+        switch (error.response.status) {
+          case 412:
+          modalRef.value.showModal(
+            'Invitation Failed',
+            'warning',
+            'Email was already invited to this organization',
+          )
+          break;
+        
+          default:
+            modalRef.value.apiDownResponse()
+            break;
+        }
+      })
+    }
+  )
 }
 </script>
