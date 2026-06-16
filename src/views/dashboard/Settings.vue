@@ -84,6 +84,34 @@
         <Modal ref="modal" />
       </div>
       <div>
+        <Form @submit="changeUserName" :validation-schema="userNameSchema" v-slot="{ errors }">
+          <div class="max-w-2xl mt-20">
+            <p for="name" class="block text-sm font-medium leading-6 text-gray-900 text-left">User Name</p>
+            <div class="mt-2">
+              <Field
+                  v-model="userName"
+                  id="user-name"
+                  name="name"
+                  type="text"
+                  autocomplete="User Name"
+                  class="block w-full rounded-md border-0 py-5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 sm:text-sm sm:leading-6" 
+                  :validation-schema="userNameSchema"
+                  :class="[ errors.name ? 'ring-orange-300' : 'ring-gray-300' ]"
+                  v-slot="{ errors }"
+                />
+                <p class="mt-2 text-sm text-orange-300" id="user-name-error">{{ errors.name }}</p>
+            </div>
+          </div>
+
+          <div class="mt-10">
+            <button @click="createProject" type="submit"
+              class="inline-flex items-center gap-x-2 rounded-md bg-gray-800  px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700">
+              Change User Name
+            </button>
+          </div>
+        </Form>
+      </div>
+      <div>
         <Form @submit="">
           <div class="max-w-2xl mt-20">
             <div class="mt-2">
@@ -107,7 +135,7 @@
 
 
 <script setup>
-import { computed, ref, useTemplateRef } from "vue";
+import { ref, useTemplateRef } from "vue";
 import { Form, Field, defineRule } from 'vee-validate';
 import { required, min, max, confirmed } from '@vee-validate/rules';
 import apiRequester from '@/services/requester';
@@ -124,6 +152,7 @@ const globalStore = useGlobalStore()
 const router = useRouter()
 const user = ref({})
 const organizationName = ref("");
+const userName = ref("");
 const canManageOrganization = ref(false);
 
 defineRule('required', required);
@@ -137,6 +166,7 @@ globalStore.setHeaderLabel('Settings')
 globalStore.getUser().then((userData) => {
   user.value = userData;
   organizationName.value = userData.getCurrentOrganization().name ?? "";
+  userName.value = userData.name ?? "";
   canManageOrganization.value = !userData.isMember();
 });
 
@@ -147,6 +177,10 @@ const schema = {
 
 const organizationNameSchema = {
   name: 'required|max:200|min:3',
+};
+
+const userNameSchema = {
+  name: 'required|max:200',
 };
 
 const showw = () => {
@@ -173,6 +207,21 @@ const changeOrganizationName = () => {
         'Success',
         'success',
         'Organization name changed.',
+      )
+    }).catch(() => {
+      modalRef.value.apiDownResponse()
+    });
+}
+
+const changeUserName = () => {
+  apiRequester.patch('/api/account', {
+      name: userName.value,
+    }).then( () => {
+      posthog.capture('user_name_changed')
+      modalRef.value.showModal(
+        'Success',
+        'success',
+        'User name changed.',
       )
     }).catch(() => {
       modalRef.value.apiDownResponse()
