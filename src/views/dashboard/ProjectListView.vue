@@ -86,7 +86,6 @@ import ressonanceLogoUrl from '@/assets/img/logo.png'
 import DefaultTransition from "@/components/Transitions/DefaultTransition.vue";
 
 var clients = ref([])
-const modalRef = useTemplateRef('modal')
 const globalStore = useGlobalStore()
 const stackOptions = [
   { value: 'django', label: 'Django', logoUrl: djangoLogoUrl },
@@ -111,6 +110,13 @@ const resolveStack = (stackValue) => {
 const loadProjects = async () => {
   const organization = (await globalStore.getUser()).getCurrentOrganization()
   const response = await apiRequester.get(`/api/organizations/${organization.id}/apps`)
+
+  if (response.data.data.length === 0) {
+    globalStore.setHeaderLabel('Create Project')
+  } else {
+    globalStore.setHeaderLabel('Project List')
+  }
+
   response.data.data.forEach(app => {
     const stack = resolveStack(app.app_language_choice)
 
