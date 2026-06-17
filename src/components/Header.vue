@@ -8,7 +8,7 @@
                             <img class="h-8 w-8" :src="logoUrl"
                                 alt="Your Company" />
                         </div>
-                        <div class="hidden md:block">
+                        <div v-if="currentOrganization" class="hidden md:block">
                             <div class="ml-10 flex items-baseline space-x-4">
                                 <RouterLink
                                     :to="{ name: 'projects' }"
@@ -51,12 +51,12 @@
                                     leave-to-class="transform opacity-0 scale-95">
                                     <MenuItems
                                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <MenuItem as="div" class="relative group/submenu">
-                                            <a href="#" 
+                                        <MenuItem v-if="currentOrganization" as="div" class="relative group/submenu">
+                                            <a href="#"
                                                 class="flex items-start justify-between gap-2 px-4 py-2 text-sm text-gray-700 cursor-pointer">
                                                 <span class="truncate">
                                                     <span class="font-bold">Organization:</span>
-                                                    <br>{{ user.getCurrentOrganization().name }}
+                                                    <br>{{ currentOrganization.name }}
                                                 </span>
                                                 <ChevronDoubleRightIcon v-if="otherUserOrganizations.length" class="mt-1 h-4 w-4 shrink-0 text-gray-500"
                                                     aria-hidden="true" />
@@ -74,13 +74,13 @@
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 :to="{ name: 'oganization-create' }">Add Organization</RouterLink>
                                         </MenuItem>
-                                        <MenuItem v-if="!user.isMember()" v-slot="{ active }">
+                                        <MenuItem v-if="!user.isMember() && currentOrganization" v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 :to="{ name: 'oganization-members' }">Organization Members</RouterLink>
                                         </MenuItem>
 										<hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
-                                        <MenuItem v-if="!isSelfHosted" v-slot="{ active }">
+                                        <MenuItem v-if="!isSelfHosted && currentOrganization" v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 :to="{ name: 'settings' }">Settings</RouterLink>
@@ -123,7 +123,7 @@
                 leave-to-class="-translate-y-2 opacity-0"
             >
                 <DisclosurePanel class="md:hidden">
-                    <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+                    <div v-if="currentOrganization" class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
                         <RouterLink
                             :to="{ name: 'projects' }"
                             :class="getMobileMenuItemClass(['projects'])"
@@ -153,6 +153,7 @@
                         </div>
                         <div class="mt-3 space-y-1 px-2">
                             <button
+                                v-if="currentOrganization"
                                 type="button"
                                 @click="isMobileOrganizationMenuOpen = !isMobileOrganizationMenuOpen"
                                 class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
@@ -167,7 +168,7 @@
                             </button>
                             <div v-if="isMobileOrganizationMenuOpen" class="space-y-1 pl-4">
                                 <div class="rounded-md px-3 py-2 text-sm font-medium text-gray-500">
-                                    Current: {{ user.getCurrentOrganization().name }}
+                                    Current: {{ currentOrganization.name }}
                                 </div>
                                 <button
                                     v-for="organization in otherUserOrganizations"
@@ -186,7 +187,7 @@
                                 Add Organization
                             </RouterLink>
                             <RouterLink
-                                v-if="!user.isMember()"
+                                v-if="!user.isMember() && currentOrganization"
                                 :to="{ name: 'oganization-members' }"
                                 :class="getMobileMenuItemClass(['oganization-members', 'oganization-invite-member'])"
                             >
@@ -195,7 +196,7 @@
 
                             <div class="border-t border-gray-700 pt-4 space-y-1">
                                 <RouterLink
-                                    v-if="!isSelfHosted"
+                                    v-if="!isSelfHosted && currentOrganization"
                                     :to="{ name: 'settings' }"
                                     :class="getMobileMenuItemClass(['settings'])"
                                 >
@@ -258,9 +259,11 @@ const isMobileOrganizationMenuOpen = ref(false)
 const user = ref([])
 const otherUserOrganizations = ref([])
 const ressonanceCloudModalRef = useTemplateRef('ressonanceCloud')
+const currentOrganization = ref({})
 
 globalStore.getUser().then((userData) => {
     user.value = userData
+    currentOrganization.value = userData.getCurrentOrganization()
     otherUserOrganizations.value = userData.organizations.filter(
         org => org.id !== userData.getCurrentOrganization().id
     )

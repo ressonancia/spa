@@ -162,6 +162,17 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
+  if (
+    to.matched.some(record => record.meta.requiresAuth) &&
+    to.name !== 'oganization-create'
+  ) {
+    const globalStore = useGlobalStore()
+    const user = await globalStore.getUser()
+    if (user && user.organizations && user.organizations.length === 0) {
+      next({ name: 'oganization-create' })
+    }
+  }
+
   next()
 })
 
