@@ -307,6 +307,11 @@ const showRessonanceCloud = () => {
 
 const changeOrganization = async (organizationId) => {
     globalStore.setCurrentOrganizationId(organizationId)
-    location.reload()
+
+    var ProjectListRoute = router.resolve({
+        name: 'projects',
+    }).href
+
+    window.location = ProjectListRoute
 }
 </script>
