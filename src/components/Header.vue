@@ -51,7 +51,7 @@
                                     leave-to-class="transform opacity-0 scale-95">
                                     <MenuItems
                                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <MenuItem v-if="currentOrganization" as="div" class="relative group/submenu">
+                                        <MenuItem v-if="currentOrganization && !isSelfHosted" as="div" class="relative group/submenu">
                                             <a href="#"
                                                 class="flex items-start justify-between gap-2 px-4 py-2 text-sm text-gray-700 cursor-pointer">
                                                 <span class="truncate">
@@ -69,18 +69,18 @@
                                                 <a @click="changeOrganization(organization.id)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" v-for="organization in otherUserOrganizations" :key="organization.id" href="#">{{ organization.name }}</a>
                                             </div>
                                         </MenuItem>
-                                        <MenuItem v-slot="{ active }">
+                                        <MenuItem v-if="!isSelfHosted" v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 :to="{ name: 'oganization-create' }">Add Organization</RouterLink>
                                         </MenuItem>
-                                        <MenuItem v-if="!user.isMember() && currentOrganization" v-slot="{ active }">
+                                        <MenuItem v-if="!user.isMember() && currentOrganization && !isSelfHosted" v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 :to="{ name: 'oganization-members' }">Organization Members</RouterLink>
                                         </MenuItem>
 										<hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
-                                        <MenuItem v-if="!isSelfHosted && currentOrganization" v-slot="{ active }">
+                                        <MenuItem v-if="currentOrganization" v-slot="{ active }">
                                             <RouterLink
                                                 :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
                                                 :to="{ name: 'settings' }">Settings</RouterLink>
@@ -153,7 +153,7 @@
                         </div>
                         <div class="mt-3 space-y-1 px-2">
                             <button
-                                v-if="currentOrganization"
+                                v-if="currentOrganization && !isSelfHosted"
                                 type="button"
                                 @click="isMobileOrganizationMenuOpen = !isMobileOrganizationMenuOpen"
                                 class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
@@ -181,13 +181,14 @@
                                 </button>
                             </div>
                             <RouterLink
+                                v-if="!isSelfHosted"
                                 :to="{ name: 'oganization-create' }"
                                 :class="getMobileMenuItemClass(['oganization-create'])"
                             >
                                 Add Organization
                             </RouterLink>
                             <RouterLink
-                                v-if="!user.isMember() && currentOrganization"
+                                v-if="!user.isMember() && currentOrganization && !isSelfHosted"
                                 :to="{ name: 'oganization-members' }"
                                 :class="getMobileMenuItemClass(['oganization-members', 'oganization-invite-member'])"
                             >
@@ -196,7 +197,7 @@
 
                             <div class="border-t border-gray-700 pt-4 space-y-1">
                                 <RouterLink
-                                    v-if="!isSelfHosted && currentOrganization"
+                                    v-if="currentOrganization"
                                     :to="{ name: 'settings' }"
                                     :class="getMobileMenuItemClass(['settings'])"
                                 >
