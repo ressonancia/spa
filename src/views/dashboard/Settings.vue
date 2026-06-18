@@ -46,7 +46,7 @@
         </Form>
         <Modal ref="modal" />
       </div>
-      <div v-if="!isSelfHosted">
+      <div>
         <Form @submit="changeOrganizationName" :validation-schema="organizationNameSchema" v-slot="{ errors }">
           <div class="max-w-2xl mt-20">
             <p for="name" class="block text-sm font-medium leading-6 text-gray-900 text-left">Organization Name</p>
@@ -83,7 +83,7 @@
         </Form>
         <Modal ref="modal" />
       </div>
-      <div v-if="!isSelfHosted">
+      <div>
         <Form @submit="changeUserName" :validation-schema="userNameSchema" v-slot="{ errors }">
           <div class="max-w-2xl mt-20">
             <p for="name" class="block text-sm font-medium leading-6 text-gray-900 text-left">User Name</p>
@@ -111,7 +111,7 @@
           </div>
         </Form>
       </div>
-      <div v-if="!isSelfHosted">
+      <div>
         <Form @submit="">
           <div class="max-w-2xl mt-20">
             <div class="mt-2">
@@ -154,7 +154,6 @@ const user = ref({})
 const organizationName = ref("");
 const userName = ref("");
 const canManageOrganization = ref(false);
-const isSelfHosted = ref(true);
 
 defineRule('required', required);
 defineRule('min', min);
@@ -163,7 +162,6 @@ defineRule('required', required);
 defineRule('max', max);
 
 globalStore.setHeaderLabel('Settings')
-isSelfHosted.value = globalStore.isSelfHosted
 
 globalStore.getUser().then((userData) => {
   user.value = userData;
