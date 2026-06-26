@@ -8,11 +8,22 @@
                             <img class="h-8 w-8" :src="logoUrl"
                                 alt="Your Company" />
                         </div>
-                        <div class="hidden md:block">
+                        <div v-if="currentOrganization" class="hidden md:block">
                             <div class="ml-10 flex items-baseline space-x-4">
-                                <a v-for="item in navigation" :key="item.name" :href="item.href"
-                                    :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']"
-                                    :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                                <RouterLink
+                                    :to="{ name: 'projects' }"
+                                    :class="getDesktopMenuItemClass(['projects'])"
+                                    :aria-current="isRouteActive(['projects']) ? 'page' : undefined"
+                                >
+                                    Projects
+                                </RouterLink>
+                                <RouterLink
+                                    :to="{ name: 'create-projects' }"
+                                    :class="getDesktopMenuItemClass(['create-projects'])"
+                                    :aria-current="isRouteActive(['create-projects']) ? 'page' : undefined"
+                                >
+                                    Create Project
+                                </RouterLink>
                             </div>
                         </div>
                     </div>
@@ -40,21 +51,50 @@
                                     leave-to-class="transform opacity-0 scale-95">
                                     <MenuItems
                                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <MenuItem v-if="currentOrganization && !isSelfHosted" as="div" class="relative group/submenu">
+                                            <a href="#"
+                                                class="flex items-start justify-between gap-2 px-4 py-2 text-sm text-gray-700 cursor-pointer">
+                                                <span class="truncate">
+                                                    <span class="font-bold">Organization:</span>
+                                                    <br>{{ currentOrganization.name }}
+                                                </span>
+                                                <ChevronDoubleRightIcon v-if="otherUserOrganizations.length" class="mt-1 h-4 w-4 shrink-0 text-gray-500"
+                                                    aria-hidden="true" />
+                                            </a>
+                                            <div
+                                                class="absolute left-full top-0 z-20 hidden w-56 rounded-md bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover/submenu:block"
+                                                v-if="otherUserOrganizations.length">
+                                                <div class="px-4 pb-2 text-sm font-semibold text-gray-900">Choose
+                                                    Organization.</div>
+                                                <a @click="changeOrganization(organization.id)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" v-for="organization in otherUserOrganizations" :key="organization.id" href="#">{{ organization.name }}</a>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuItem v-if="!isSelfHosted" v-slot="{ active }">
+                                            <RouterLink
+                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                                                :to="{ name: 'oganization-create' }">Add Organization</RouterLink>
+                                        </MenuItem>
+                                        <MenuItem v-if="!user.isMember() && currentOrganization && !isSelfHosted" v-slot="{ active }">
+                                            <RouterLink
+                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                                                :to="{ name: 'oganization-members' }">Organization Members</RouterLink>
+                                        </MenuItem>
+										<hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
+                                        <MenuItem v-if="currentOrganization && !isSelfHosted" v-slot="{ active }">
+                                            <RouterLink
+                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                                                :to="{ name: 'settings' }">Settings</RouterLink>
+                                        </MenuItem>
+                                        <MenuItem @click="logout" v-slot="{ active }">
+                                            <a href="#"
+                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
+                                        </MenuItem>
+                                        <hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
                                         <MenuItem>
                                             <a href="#"
                                                 class="block px-4 py-2 text-sm text-gray-700 cursor-default truncate">
 												<span class="font-bold">Signed in as:</span><br>{{ user.email }}
 											</a>
-                                        </MenuItem>
-										<hr class="h-0.5 border-t-0 bg-neutral-100 dark:bg-state/10" />
-                                        <MenuItem v-if="!isSelfHosted" v-slot="{ active }">
-                                            <RouterLink
-                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
-                                                to="/dashboard/settings">Settings</RouterLink>
-                                        </MenuItem>
-                                        <MenuItem @click="logout" v-slot="{ active }">
-                                            <a href="#"
-                                                :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign Out</a>
                                         </MenuItem>
                                     </MenuItems>
                                 </transition>
@@ -74,31 +114,107 @@
                 </div>
             </div>
 
-            <DisclosurePanel class="md:hidden">
-                <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                    <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href"
-                        :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
-                        :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
-                    <DisclosureButton v-if="isSelfHosted" as="a" @click="showRessonanceCloud"
-                        class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium">Try Ressonance Cloud</DisclosureButton>
-                </div>
-                <div class="border-t border-gray-700 pb-3 pt-4">
-                    <div class="flex items-center px-5">
-                        <div class="flex-shrink-0">
-                            <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="" />
+            <transition
+                enter-active-class="transform-gpu transition duration-200 ease-out"
+                enter-from-class="-translate-y-2 opacity-0"
+                enter-to-class="translate-y-0 opacity-100"
+                leave-active-class="transform-gpu transition duration-150 ease-in"
+                leave-from-class="translate-y-0 opacity-100"
+                leave-to-class="-translate-y-2 opacity-0"
+            >
+                <DisclosurePanel class="md:hidden">
+                    <div v-if="currentOrganization" class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+                        <RouterLink
+                            :to="{ name: 'projects' }"
+                            :class="getMobileMenuItemClass(['projects'])"
+                            :aria-current="isRouteActive(['projects']) ? 'page' : undefined"
+                        >
+                            Projects
+                        </RouterLink>
+                        <RouterLink
+                            :to="{ name: 'create-projects' }"
+                            :class="getMobileMenuItemClass(['create-projects'])"
+                            :aria-current="isRouteActive(['create-projects']) ? 'page' : undefined"
+                        >
+                            Create Project
+                        </RouterLink>
+                        <DisclosureButton v-if="isSelfHosted" as="a" @click="showRessonanceCloud"
+                            class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium">Try Ressonance Cloud</DisclosureButton>
+                    </div>
+                    <div class="border-t border-gray-700 pb-3 pt-4">
+                        <div class="flex items-center px-5">
+                            <div class="flex-shrink-0">
+                                <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="" />
+                            </div>
+                            <div class="ml-3">
+                                <!-- <div class="text-base font-medium leading-none text-white">{{ user.name }}</div> -->
+                                <div class="text-sm font-medium leading-none text-gray-400">{{ user.email }}</div>
+                            </div>
                         </div>
-                        <div class="ml-3">
-                            <!-- <div class="text-base font-medium leading-none text-white">{{ user.name }}</div> -->
-                            <div class="text-sm font-medium leading-none text-gray-400">{{ user.email }}</div>
+                        <div class="mt-3 space-y-1 px-2">
+                            <button
+                                v-if="currentOrganization && !isSelfHosted"
+                                type="button"
+                                @click="isMobileOrganizationMenuOpen = !isMobileOrganizationMenuOpen"
+                                class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                            >
+                                <span>Organizations</span>
+                                <ChevronDownIcon
+                                    :class="[
+                                        isMobileOrganizationMenuOpen ? 'rotate-180' : '',
+                                        'h-5 w-5 text-gray-400 transition-transform duration-200'
+                                    ]"
+                                />
+                            </button>
+                            <div v-if="isMobileOrganizationMenuOpen" class="space-y-1 pl-4">
+                                <div class="rounded-md px-3 py-2 text-sm font-medium text-gray-500">
+                                    Current: {{ currentOrganization.name }}
+                                </div>
+                                <button
+                                    v-for="organization in otherUserOrganizations"
+                                    :key="organization.id"
+                                    type="button"
+                                    @click="changeOrganization(organization.id)"
+                                    class="block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                                >
+                                    {{ organization.name }}
+                                </button>
+                            </div>
+                            <RouterLink
+                                v-if="!isSelfHosted"
+                                :to="{ name: 'oganization-create' }"
+                                :class="getMobileMenuItemClass(['oganization-create'])"
+                            >
+                                Add Organization
+                            </RouterLink>
+                            <RouterLink
+                                v-if="!user.isMember() && currentOrganization && !isSelfHosted"
+                                :to="{ name: 'oganization-members' }"
+                                :class="getMobileMenuItemClass(['oganization-members', 'oganization-invite-member'])"
+                            >
+                                Organization Members
+                            </RouterLink>
+
+                            <div class="border-t border-gray-700 pt-4 space-y-1">
+                                <RouterLink
+                                    v-if="currentOrganization && !isSelfHosted"
+                                    :to="{ name: 'settings' }"
+                                    :class="getMobileMenuItemClass(['settings'])"
+                                >
+                                    Settings
+                                </RouterLink>
+                                <button
+                                    type="button"
+                                    @click="logout"
+                                    class="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-3 space-y-1 px-2">
-                        <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href"
-                            class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
-                            {{ item.name }}</DisclosureButton>
-                    </div>
-                </div>
-            </DisclosurePanel>
+                </DisclosurePanel>
+            </transition>
         </Disclosure>
 
         <header class="bg-white shadow">
@@ -127,7 +243,7 @@
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, ChevronDoubleRightIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useGlobalStore } from "@/stores/global";
 import { ref, useTemplateRef } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
@@ -140,22 +256,45 @@ const route = useRoute()
 const globalStore = useGlobalStore()
 const headerLabel = ref('')
 const isSelfHosted = ref(true)
+const isMobileOrganizationMenuOpen = ref(false)
 const user = ref([])
+const otherUserOrganizations = ref([])
 const ressonanceCloudModalRef = useTemplateRef('ressonanceCloud')
+const currentOrganization = ref({})
 
 globalStore.getUser().then((userData) => {
     user.value = userData
+    currentOrganization.value = userData.getCurrentOrganization()
+    otherUserOrganizations.value = userData.organizations.filter(
+        org => org.id !== userData.getCurrentOrganization().id
+    )
 })
 
 headerLabel.value = globalStore.headerLabel
 isSelfHosted.value = globalStore.isSelfHosted
 
 globalStore.$onAction((action) => {
-    headerLabel.value = action.args[0] ?? 'Project'
+    if (action.name === 'setHeaderLabel') {
+        headerLabel.value = action.args[0] ?? 'Project'
+    }
 })
 
-const getRoutePathByName = (routeName) => {
-    return router.getRoutes().find((route) => route.name === routeName).path
+const isRouteActive = (routeNames = []) => {
+    return routeNames.includes(route.name)
+}
+
+const getDesktopMenuItemClass = (routeNames = []) => {
+    return [
+        isRouteActive(routeNames) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+        'rounded-md px-3 py-2 text-sm font-medium'
+    ]
+}
+
+const getMobileMenuItemClass = (routeNames = []) => {
+    return [
+        isRouteActive(routeNames) ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
+        'block rounded-md px-3 py-2 text-base font-medium'
+    ]
 }
 
 const logout = () => {
@@ -170,11 +309,13 @@ const showRessonanceCloud = () => {
   ressonanceCloudModalRef.value.showModal()
 }
 
-const navigation = [
-  { name: 'Projects', href: getRoutePathByName('projects'), current: route.name == 'projects' },
-  { name: 'Create Project', href: getRoutePathByName('create-projects'), current: route.name == 'create-projects' },
-//   { name: 'Team', href: '#', current: false }
-]
+const changeOrganization = async (organizationId) => {
+    globalStore.setCurrentOrganizationId(organizationId)
 
-const userNavigation = []
+    var ProjectListRoute = router.resolve({
+        name: 'projects',
+    }).href
+
+    window.location = ProjectListRoute
+}
 </script>

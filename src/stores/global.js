@@ -7,8 +7,6 @@ export const useGlobalStore = defineStore("global", {
     
     let token = localStorage.getItem('token')
     let validToken = token ? true : false
-    let __user = null
-
     return {
       headerLabel: 'Projects',
       isLoggedIn: validToken,
@@ -29,6 +27,13 @@ export const useGlobalStore = defineStore("global", {
       localStorage.removeItem('token')
     	this.isLoggedIn = false;
       this.token = null
+      this.__user = null
+    },
+    setCurrentOrganizationId(organizationId) {
+      localStorage.setItem('currentOrganizationId', organizationId)
+    },
+    cleanCurrentOrganization() {
+      localStorage.removeItem('currentOrganizationId')
     },
     async getUser() {
       if (!this.isLoggedIn) {
@@ -41,6 +46,26 @@ export const useGlobalStore = defineStore("global", {
 
       let response = await apiRequester.get('/api/user')
       this.__user = response.data
+
+      this.__user.getCurrentOrganization = function () {
+        const currentOrganization = this.organizations.find(
+          organization => organization.id === localStorage.getItem('currentOrganizationId')
+        )
+        
+        if(currentOrganization) {
+          return currentOrganization
+        }
+
+        return this.organizations[0]
+      }
+
+      this.__user.isMember = function (organizationId) {
+        organizationId = organizationId ?? localStorage.getItem('currentOrganizationId')
+
+        const organization = this.organizations.find(org => org.id === organizationId)
+        return organization?.pivot?.role === 'member'
+      }
+
       return this.__user
     }
   },

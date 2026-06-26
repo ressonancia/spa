@@ -13,6 +13,10 @@ import ResetPassword from "@/views/ResetPassword.vue";
 import SocialLogin from "@/views/SocialLogin.vue";
 import EmailVerificationCallOut from "@/views/EmailVerificationCallOut.vue";
 import { useGlobalStore } from "@/stores/global";
+import MembersView from "@/views/dashboard/MembersView.vue";
+import InviteMemberView from "@/views/dashboard/InviteMemberView.vue";
+import EmailInvitationCallOut from "@/views/EmailInvitationCallOut.vue";
+import CreateOrganizarionFormView from "@/views/dashboard/CreateOrganizarionFormView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +41,7 @@ const router = createRouter({
           component: CreateProjectView,
         },
         {
-          path: ":project",
+          path: ":project/stats",
           name: "project",
           component: ProjectViewStats,
         },
@@ -55,7 +59,23 @@ const router = createRouter({
           path: "settings",
           name: "settings",
           component: Settings,
-        }
+        },
+        {
+          path: "organization/members",
+          name: "oganization-members",
+          component: MembersView,
+        },
+
+        {
+          path: "organization/invite-member",
+          name: "oganization-invite-member",
+          component: InviteMemberView,
+        },
+        {
+          path: "organization/create",
+          name: "oganization-create",
+          component: CreateOrganizarionFormView,
+        },
       ]
     },
     {
@@ -86,6 +106,14 @@ const router = createRouter({
       path: "/email-verification",
       name: "email-verification",
       component: EmailVerificationCallOut,
+      meta: {
+        transition: "slide-fade"
+      }
+    },
+    {
+      path: "/email-invitation",
+      name: "email-invitation",
+      component: EmailInvitationCallOut,
       meta: {
         transition: "slide-fade"
       }
@@ -131,6 +159,17 @@ router.beforeEach(async (to, from, next) => {
     let user = await globalStore.getUser()
     if (!user.email_verified_at) {
       next({ name: 'email-verification' })
+    }
+  }
+
+  if (
+    to.matched.some(record => record.meta.requiresAuth) &&
+    to.name !== 'oganization-create'
+  ) {
+    const globalStore = useGlobalStore()
+    const user = await globalStore.getUser()
+    if (user && user.organizations && user.organizations.length === 0) {
+      next({ name: 'oganization-create' })
     }
   }
 

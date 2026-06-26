@@ -70,6 +70,7 @@ import { stringLimit } from '@/services/utils';
 import apiRequester from '@/services/requester';
 import { ref, useTemplateRef } from 'vue'
 import { DateTime } from 'luxon'
+import { useGlobalStore } from "@/stores/global";
 import djangoLogoUrl from '@/assets/img/django.png'
 import dotNetLogoUrl from '@/assets/img/dot-net.png'
 import flaskLogoUrl from '@/assets/img/flask.png'
@@ -85,7 +86,7 @@ import ressonanceLogoUrl from '@/assets/img/logo.png'
 import DefaultTransition from "@/components/Transitions/DefaultTransition.vue";
 
 var clients = ref([])
-const modalRef = useTemplateRef('modal')
+const globalStore = useGlobalStore()
 const stackOptions = [
   { value: 'django', label: 'Django', logoUrl: djangoLogoUrl },
   { value: 'dotnet', label: 'Dot NET', logoUrl: dotNetLogoUrl },
@@ -106,21 +107,29 @@ const resolveStack = (stackValue) => {
   return stackByValue[normalizedStack] ?? null
 }
 
-apiRequester.get(`${import.meta.env.VITE_API_URL}/api/apps`)
-  .then(function (response) {
-    response.data.data.forEach(app => {
-      const stack = resolveStack(app.app_language_choice)
+const loadProjects = async () => {
+  const organization = (await globalStore.getUser()).getCurrentOrganization()
+  const response = await apiRequester.get(`/api/organizations/${organization.id}/apps`)
 
-      clients.value.push({
-        routeId: app.id,
-        id: app.app_id,
-        name: app.app_name,
-        imageUrl: stack?.logoUrl ?? ressonanceLogoUrl,
-        stackLabel: stack?.label ?? 'Ressonance App',
-        created_at: DateTime.fromISO(app.created_at).toFormat("yyyy-M-d")
-      })
-    });    
-  }).catch(function (error) {
-    modalRef.value.apiDownResponse()
+  if (response.data.data.length === 0) {
+    globalStore.setHeaderLabel('Create Project')
+  } else {
+    globalStore.setHeaderLabel('Project List')
+  }
+
+  response.data.data.forEach(app => {
+    const stack = resolveStack(app.app_language_choice)
+
+    clients.value.push({
+      routeId: app.id,
+      id: app.app_id,
+      name: app.app_name,
+      imageUrl: stack?.logoUrl ?? ressonanceLogoUrl,
+      stackLabel: stack?.label ?? 'Ressonance App',
+      created_at: DateTime.fromISO(app.created_at).toFormat("yyyy-M-d")
+    })
   })
+}
+
+loadProjects()
 </script>

@@ -76,6 +76,10 @@ const showModal = (
     buttonAction.value = modalButtonRoute
 }
 
+const closeModal = () => {
+  open.value = false
+}
+
 const goto = () => {
     if (typeof buttonAction.value === 'function') {
         buttonAction.value();
@@ -101,6 +105,7 @@ const apiDownResponse = () => {
 
 defineExpose({
     showModal,
-    apiDownResponse
+    apiDownResponse,
+    closeModal
 })
 </script>

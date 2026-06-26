@@ -56,7 +56,9 @@ const deleteProject = async () => {
 
 		let response;
 
-		response = await apiRequester.delete(`/api/apps/${route.params.project}`);
+		const organization = (await globalStore.getUser()).getCurrentOrganization()
+
+		response = await apiRequester.delete(`/api/organizations/${organization.id}/apps/${route.params.project}`);
 
 		posthog.capture('project_deleted', {
 			project_name: route.query.projectName,
