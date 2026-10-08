@@ -29,6 +29,7 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_API_CLIENT_SECRET: ${{ secrets.VITE_API_CLIENT_SECRET }}
+          VITE_GA_MEASUREMENT_ID: ${{ vars.VITE_GA_MEASUREMENT_ID }}
         run: npm run build
 
       # Step 5: Deploy using the deploy script

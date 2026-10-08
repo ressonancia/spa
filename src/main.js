@@ -6,6 +6,7 @@ import { createPinia } from "pinia";
 import VueApexCharts from "vue3-apexcharts";
 import { configure, defineRule } from 'vee-validate';
 import posthog from 'posthog-js';
+import { initializeGoogleAnalytics, trackPageView } from '@/services/googleAnalytics';
 
 import 'highlight.js/styles/stackoverflow-dark.css'
 import hljs from 'highlight.js/lib/core';
@@ -57,6 +58,11 @@ if (import.meta.env.VITE_POSTHOG_PROJECT_TOKEN) {
     defaults: '2026-01-30',
   });
 }
+
+initializeGoogleAnalytics()
+router.afterEach((to) => {
+  trackPageView(to)
+})
 
 const app = createApp(App)
 
