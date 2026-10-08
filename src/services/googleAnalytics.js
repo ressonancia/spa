@@ -22,9 +22,6 @@ export function initializeGoogleAnalytics() {
   }
 
   window.gtag('js', new Date())
-  // Keep GA4 from collecting unsanitized URLs before the router can report a view.
-  // The cookie_domain default is "auto", so GA4 shares its first-party cookie across
-  // ressonance.com and app.ressonance.com without cross-domain linker configuration.
   window.gtag('config', measurementId, { send_page_view: false })
   isInitialized = true
 }
@@ -42,8 +39,6 @@ export function trackPageView(route) {
   }
 
   const queryString = safeQuery.toString()
-  // Use the route pattern (for example, /dashboard/:project/stats) instead of
-  // concrete dynamic segments that could contain a user's data.
   const routePath = route.matched?.at(-1)?.path || `/${route.name || 'unknown'}`
   const pageLocation = `${window.location.origin}${routePath}${queryString ? `?${queryString}` : ''}`
 
