@@ -146,6 +146,7 @@ import { Form, Field, defineRule } from 'vee-validate';
 import { required, max, min, confirmed, email as emailRule } from '@vee-validate/rules';
 import Alert from '@/components/Alert.vue';
 import posthog from 'posthog-js';
+import { trackSignUp } from '@/services/googleAnalytics';
 
 const isSelfHosted = import.meta.env.VITE_RESSONANCE_SELF_HOSTED === 'true'
 const googleRedirect = import.meta.env.VITE_API_URL + '/api/auth/google/redirect';
@@ -162,6 +163,7 @@ const route = useRoute()
 const globalStore = useGlobalStore()
 
 const showPaymentAlert = ref(false);
+let signUpEventSent = false
 
 defineRule('required', required);
 defineRule('max', max);
@@ -193,6 +195,10 @@ const login = async () => {
       globalStore.login(response.data.access_token)
       posthog.identify(email.value, { name: name.value })
       posthog.capture('user_signed_up', { name: name.value })
+      if (!signUpEventSent) {
+        trackSignUp('email')
+        signUpEventSent = true
+      }
       router.push({
         name: 'email-verification'
       })
