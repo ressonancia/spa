@@ -193,12 +193,12 @@ const login = async () => {
     })
     .then( (response) => {
       globalStore.login(response.data.access_token)
-      posthog.identify(email.value, { name: name.value })
-      posthog.capture('user_signed_up', { name: name.value })
       if (!signUpEventSent) {
         trackSignUp('email')
         signUpEventSent = true
       }
+      posthog.identify(email.value, { name: name.value })
+      posthog.capture('user_signed_up', { name: name.value })
       router.push({
         name: 'email-verification'
       })
