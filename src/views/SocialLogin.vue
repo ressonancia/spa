@@ -6,6 +6,10 @@
   </div>
 </template>
 
+<script>
+const reportedSignUpAuthorizationCodes = new Set()
+</script>
+
 <script setup>
 import Modal from "@/views/modals/Modal.vue";
 import loadingGifUrl from "@/assets/img/loading.gif";
@@ -13,6 +17,7 @@ import { useRoute, useRouter } from "vue-router";
 import apiRequester from '@/services/requester';
 import { useGlobalStore } from "@/stores/global";
 import posthog from 'posthog-js';
+import { trackSignUp } from '@/services/googleAnalytics';
 
 const route = useRoute();
 const authorizationCode = route.query.authorizationCode
@@ -29,6 +34,22 @@ const loginWithAuthorizationCode = async () => {
     })
     .then( (response) => {
       globalStore.login(response.data.access_token)
+
+      const authProvider = response.data.auth_provider
+      const signupAuthorizationCode = Array.isArray(authorizationCode)
+        ? authorizationCode.join(',')
+        : authorizationCode
+
+      if (
+        response.data.is_new_user === true &&
+        (authProvider === 'google' || authProvider === 'github') &&
+        typeof signupAuthorizationCode === 'string' &&
+        !reportedSignUpAuthorizationCodes.has(signupAuthorizationCode)
+      ) {
+        reportedSignUpAuthorizationCodes.add(signupAuthorizationCode)
+        trackSignUp(authProvider)
+      }
+
       posthog.identify(response.data.user.email)
       posthog.capture('social_login_completed')
 
