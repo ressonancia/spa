@@ -19,6 +19,7 @@ jobs:
       REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
       REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
       SSH_KEY_NAME: id_rsa_ressonance
+      WG_INTERFACE: wg0
 
     steps:
       # Step 1: Checkout the code
@@ -52,7 +53,22 @@ jobs:
           fi
           echo "Build completed successfully."
 
-      # Step 5: Copy the build files to the remote server
+      # Step 5: Connect to the private network through WireGuard
+      - name: Set up WireGuard
+        env:
+          WIREGUARD_CONF: ${{ secrets.WIREGUARD_CONF }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq wireguard-tools
+
+          sudo install -d -m 700 /etc/wireguard
+          printf '%s\n' "$WIREGUARD_CONF" | tr -d '\r' | sudo tee /etc/wireguard/$WG_INTERFACE.conf > /dev/null
+          sudo chmod 600 /etc/wireguard/$WG_INTERFACE.conf
+
+          sudo wg-quick up $WG_INTERFACE
+          sudo wg show $WG_INTERFACE
+
+      # Step 6: Copy the build files to the remote server
       - name: Deploy to Server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -71,4 +87,7 @@ jobs:
 
       - name: Clean Up
         if: always()
-        run: rm -f ~/.ssh/$SSH_KEY_NAME .env.production
+        run: |
+          sudo wg-quick down $WG_INTERFACE 2>/dev/null || true
+          sudo rm -f /etc/wireguard/$WG_INTERFACE.conf
+          rm -f ~/.ssh/$SSH_KEY_NAME .env.production
