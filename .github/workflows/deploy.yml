@@ -65,8 +65,12 @@ jobs:
           printf '%s\n' "$WIREGUARD_CONF" | tr -d '\r' | sudo tee /etc/wireguard/$WG_INTERFACE.conf > /dev/null
           sudo chmod 600 /etc/wireguard/$WG_INTERFACE.conf
 
-          sudo wg-quick up $WG_INTERFACE
-          sudo wg show $WG_INTERFACE
+          # Output is discarded because wg-quick echoes VPN addresses that log masking does not cover
+          if ! sudo wg-quick up $WG_INTERFACE > /dev/null 2>&1; then
+            echo "Error: failed to bring up WireGuard interface '$WG_INTERFACE'."
+            exit 1
+          fi
+          echo "WireGuard interface '$WG_INTERFACE' is up."
 
       # Step 6: Copy the build files to the remote server
       - name: Deploy to Server
