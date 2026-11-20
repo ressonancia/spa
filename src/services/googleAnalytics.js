@@ -1,10 +1,14 @@
 const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID
+const googleAdsId = import.meta.env.VITE_GOOGLE_ADS_ID
 let isInitialized = false
 
-const attributionQueryParameters = /^(utm_[a-z0-9_]+|gclid|dclid|gbraid|wbraid)$/i
+const attributionQueryParameters = /^(utm_[a-z0-9_]+|gclid|dclid|gbraid|wbraid|_gl)$/i
+const crossDomainLinkerConfig = {
+  domains: ['ressonance.com', 'app.ressonance.com'],
+}
 
 export function initializeGoogleAnalytics() {
-  if (!measurementId || typeof window === 'undefined' || isInitialized) {
+  if ((!measurementId && !googleAdsId) || typeof window === 'undefined' || isInitialized) {
     return
   }
 
@@ -17,17 +21,30 @@ export function initializeGoogleAnalytics() {
     const script = document.createElement('script')
     script.id = 'google-analytics-tag'
     script.async = true
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`
+    const tagId = measurementId || googleAdsId
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(tagId)}`
     document.head.appendChild(script)
   }
 
   window.gtag('js', new Date())
-  window.gtag('config', measurementId, { send_page_view: false })
+  window.gtag('set', 'linker', crossDomainLinkerConfig)
+  if (measurementId) {
+    window.gtag('config', measurementId, {
+      send_page_view: false,
+      linker: crossDomainLinkerConfig,
+    })
+  }
+  if (googleAdsId) {
+    window.gtag('config', googleAdsId, {
+      send_page_view: false,
+      linker: crossDomainLinkerConfig,
+    })
+  }
   isInitialized = true
 }
 
 export function trackPageView(route) {
-  if (!isInitialized || typeof window === 'undefined') {
+  if (!measurementId || !isInitialized || typeof window === 'undefined') {
     return
   }
 
@@ -49,7 +66,7 @@ export function trackPageView(route) {
 }
 
 export function trackSignUp(method) {
-  if (!isInitialized || typeof window === 'undefined') {
+  if (!measurementId || !isInitialized || typeof window === 'undefined') {
     return
   }
 
