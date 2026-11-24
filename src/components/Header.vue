@@ -18,6 +18,13 @@
                                     Projects
                                 </RouterLink>
                                 <RouterLink
+                                    :to="{ name: 'metrics' }"
+                                    :class="getDesktopMenuItemClass(['metrics', 'project'])"
+                                    :aria-current="isRouteActive(['metrics', 'project']) ? 'page' : undefined"
+                                >
+                                    Metrics
+                                </RouterLink>
+                                <RouterLink
                                     :to="{ name: 'create-projects' }"
                                     :class="getDesktopMenuItemClass(['create-projects'])"
                                     :aria-current="isRouteActive(['create-projects']) ? 'page' : undefined"
@@ -130,6 +137,13 @@
                             :aria-current="isRouteActive(['projects']) ? 'page' : undefined"
                         >
                             Projects
+                        </RouterLink>
+                        <RouterLink
+                            :to="{ name: 'metrics' }"
+                            :class="getMobileMenuItemClass(['metrics', 'project'])"
+                            :aria-current="isRouteActive(['metrics', 'project']) ? 'page' : undefined"
+                        >
+                            Metrics
                         </RouterLink>
                         <RouterLink
                             :to="{ name: 'create-projects' }"
@@ -263,12 +277,14 @@ const ressonanceCloudModalRef = useTemplateRef('ressonanceCloud')
 const currentOrganization = ref({})
 
 globalStore.getUser().then((userData) => {
+    if (!userData) return
     user.value = userData
-    currentOrganization.value = userData.getCurrentOrganization()
-    otherUserOrganizations.value = userData.organizations.filter(
-        org => org.id !== userData.getCurrentOrganization().id
+    const org = userData.getCurrentOrganization()
+    currentOrganization.value = org || {}
+    otherUserOrganizations.value = (userData.organizations || []).filter(
+        organization => organization.id !== org?.id
     )
-})
+}).catch(() => {})
 
 headerLabel.value = globalStore.headerLabel
 isSelfHosted.value = globalStore.isSelfHosted

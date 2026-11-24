@@ -1,7 +1,17 @@
 <template>
 	<DefaultTransition name="slide-fade" appear>
 		<div>
-			<h1 class="mt-10 text-3xl tracking-tight text-gray-900 sm:text-4xl">API Key</h1>
+			<div class="mt-10 flex flex-wrap items-center justify-between gap-4">
+				<h1 class="text-3xl tracking-tight text-gray-900 sm:text-4xl">API Key</h1>
+				<RouterLink
+					v-if="app.id"
+					:to="{ name: 'project', params: { project: app.id } }"
+					class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
+				>
+					<ChartBarIcon class="h-4 w-4 text-gray-500" />
+					View Stats
+				</RouterLink>
+			</div>
 			<p class="mt-6 text-xl leading-8">Use this API Key to authenticate and send messages to Ressonance at the server side.
 				<br> For more instructions see the <a target="_blank" class="text-orange-600 hover:text-orange-900" href="https://docs.ressonance.com/">Complete Ressonance Documentation.</a></p>
 
@@ -39,6 +49,7 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { ref, useTemplateRef } from 'vue'
+import { ChartBarIcon } from '@heroicons/vue/24/outline'
 import apiRequester from '@/services/requester';
 import posthog from 'posthog-js';
 import CopyField from '@/components/CopyField.vue';
