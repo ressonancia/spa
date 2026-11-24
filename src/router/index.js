@@ -5,6 +5,7 @@ import DeleteProjectView from "@/views/dashboard/DeleteProjectView.vue";
 import Settings from "@/views/dashboard/Settings.vue";
 import ProjectViewSettings from "@/views/dashboard/ProjectViewSettings.vue";
 import ProjectViewStats from "@/views/dashboard/ProjectViewStats.vue";
+import MetricsView from "@/views/dashboard/MetricsView.vue";
 import Dashboard from "@/views/dashboard/Dashboard.vue";
 import LoginView from "@/views/LoginView.vue";
 import CreateAccount from "@/views/CreateAccount.vue";
@@ -34,6 +35,11 @@ const router = createRouter({
           path: "",
           name: "projects",
           component: ProjectListView,
+        },
+        {
+          path: "metrics",
+          name: "metrics",
+          component: MetricsView,
         },
         {
           path: "projects/create",
@@ -146,19 +152,25 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  
+  const globalStore = useGlobalStore()
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const globalStore = useGlobalStore()
     if (!globalStore.isLoggedIn) {
-      next({ name: 'login' })
+      return next({ name: 'login' })
     }
   }
 
   if (to.matched.some(record => record.meta.requiresEmailVerification)) {
-    const globalStore = useGlobalStore()
-    let user = await globalStore.getUser()
-    if (!user.email_verified_at) {
-      next({ name: 'email-verification' })
+    try {
+      const user = await globalStore.getUser()
+      if (!user) {
+        return next({ name: 'login' })
+      }
+      if (!user.email_verified_at) {
+        return next({ name: 'email-verification' })
+      }
+    } catch {
+      return next({ name: 'login' })
     }
   }
 
@@ -166,14 +178,17 @@ router.beforeEach(async (to, from, next) => {
     to.matched.some(record => record.meta.requiresAuth) &&
     to.name !== 'oganization-create'
   ) {
-    const globalStore = useGlobalStore()
-    const user = await globalStore.getUser()
-    if (user && user.organizations && user.organizations.length === 0) {
-      next({ name: 'oganization-create' })
+    try {
+      const user = await globalStore.getUser()
+      if (user && user.organizations && user.organizations.length === 0) {
+        return next({ name: 'oganization-create' })
+      }
+    } catch {
+      return next({ name: 'login' })
     }
   }
 
-  next()
+  return next()
 })
 
 export default router;
